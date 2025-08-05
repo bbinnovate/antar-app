@@ -35,6 +35,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2c413d0f-e2b7-4111-aad0-efd0116555fc"
+      }
+    },
+    "owner": "bbinnovations"
   }
 }

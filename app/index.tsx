@@ -53,7 +53,7 @@ export default function Screen() {
           <View className='flex-row justify-around gap-3'>
             <View className='items-center'>
               <Text className='text-sm text-muted-foreground'>Dimension</Text>
-              <Text className='text-xl font-semibold'>C-137</Text>
+              <Text className='text-xl font-semibold'>C-156</Text>
             </View>
             <View className='items-center'>
               <Text className='text-sm text-muted-foreground'>Age</Text>
