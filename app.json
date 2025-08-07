@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/profileLogo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.bbinnovations.antar"
     },
     "web": {
       "bundler": "metro",
