@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Antar",
-    "slug": "Antar",
+    "slug": "antar",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/profileLogo.png",
@@ -39,7 +39,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "2c413d0f-e2b7-4111-aad0-efd0116555fc"
+        "projectId": "f861d20e-36a2-4b98-b333-0673c134853c"
       }
     },
     "owner": "bbinnovations"
