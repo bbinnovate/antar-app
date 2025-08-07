@@ -1,10 +1,14 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { View, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { PasswordInput } from "~/components/ui/password-input";
 import { Text } from "~/components/ui/text";
+import RESTApiCall from "~/lib/RESTApiCall";
+import Toast from "react-native-toast-message";
+import { useIsFocused } from "@react-navigation/native";
 
 interface FormData {
   email: string;
@@ -21,6 +25,8 @@ export default function LoginScreen() {
     email: "",
     password: "",
   });
+
+  const isFocused = useIsFocused();
 
   const [errors, setErrors] = React.useState<FormErrors>({});
   const [isLoading, setIsLoading] = React.useState(false);
@@ -48,13 +54,34 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       // TODO: Implement actual login API call
-      console.log("Login data:", formData);
-
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Navigate to complete profile screen after successful login
-      router.replace("/(tabs)/home");
+      const apiCall = new RESTApiCall();
+      const response = await apiCall.post("auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response?.status !== 200) {
+        Toast.show({
+          type: "error",
+          text1: "Login failed",
+          text2: response?.data?.error || "Login failed. Please try again.",
+        });
+      } else {
+        const storeData = {
+          token: response?.data?.token,
+          ...response?.data?.user,
+        };
+        AsyncStorage.setItem("antar-app-access-data", JSON.stringify(storeData));
+        Toast.show({
+          type: "success",
+          text1: "Login successful",
+          text2: "Welcome back! Redirecting to your dashboard.",
+        });
+        // Navigate to home or dashboard after successful login
+        router.replace("/(tabs)/home");
+      }
     } catch (error) {
       console.error("Login error:", error);
     } finally {
@@ -69,6 +96,13 @@ export default function LoginScreen() {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
+
+  useEffect(() => {
+    if (isFocused) {     
+      setFormData({ email: "", password: "" });
+      setErrors({});
+    }
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView

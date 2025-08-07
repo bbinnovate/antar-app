@@ -1,10 +1,12 @@
 import * as React from "react";
-import { View, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Platform, ToastAndroid } from "react-native";
 import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { PasswordInput } from "~/components/ui/password-input";
 import { Text } from "~/components/ui/text";
+import RESTApiCall from "~/lib/RESTApiCall";
+import Toast from "react-native-toast-message";
 
 // api = https://antar-admin.vercel.app/api/app/auth/registration
 
@@ -75,44 +77,75 @@ export default function RegisterScreen() {
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        "https://antar-admin.vercel.app/api/app/auth/registration",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            first_name: formData.first_name,
-            last_name: formData.last_name,
-            email: formData.email,
-            number: formData.number,
-            password: formData.password,
-          }),
-        }
-      );
+      const apiCall = new RESTApiCall();
+      const response = await apiCall.post("auth/registration", {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        number: formData.number,
+        password: formData.password,
+      });
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       first_name: formData.first_name,
+      //       last_name: formData.last_name,
+      //       email: formData.email,
+      //       number: formData.number,
+      //       password: formData.password,
+      //     }),
+      //   }
+      // );
 
-      const data = await response.json();
+      // const data = await response.json();
 
-      if (response.ok) {
+      if (response?.data?.success) {
         // Registration successful
-        console.log("Registration successful:", data);
+        console.log("Registration successful:", response.data);
+        Toast.show({
+          type: 'success',
+          text1: 'Registration successful',
+          text2: 'You can now log in with your credentials.',
+        });
         // Navigate to login screen after successful registration
         router.push("/login");
       } else {
-        // Handle API errors
-        console.log("Registration failed:", data);
-
-        // Check if API returned specific field errors
-        if (data.errors) {
-          setErrors(data.errors);
-        } else if (data.message) {
-          // Show general error message
-          setErrors({ email: data.message });
+        if (response?.data.errorKey) {
+          setErrors({ [response.data.errorKey]: response?.data?.error });
+          Toast.show({
+            type: 'error',
+            text1: 'Registration failed',
+            text2: response?.data?.error || "Registration failed. Please try again.",
+          });
         } else {
-          setErrors({ email: "Registration failed. Please try again." });
+          Toast.show({
+            type: 'error',
+            text1: 'Registration failed',
+            text2: response?.data?.error || "Registration failed. Please try again.",
+          });
         }
+        console.log("Registration failed:", response.data);
       }
+
+      // if (response.ok) {
+      //   // Registration successful
+      //   console.log("Registration successful:", data);
+      //   // Navigate to login screen after successful registration
+      //   router.push("/login");
+      // } else {
+      //   // Handle API errors
+      //   console.log("Registration failed:", data);
+
+      //   // Check if API returned specific field errors
+      //   if (data.errors) {
+      //     setErrors(data.errors);
+      //   } else if (data.message) {
+      //     // Show general error message
+      //     setErrors({ email: data.message });
+      //   } else {
+      //     setErrors({ email: "Registration failed. Please try again." });
+      //   }
+      // }
     } catch (error) {
       console.error("Registration error:", error);
       setErrors({

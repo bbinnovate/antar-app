@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useCallback, useState } from "react";
 import { View, ScrollView, Alert } from "react-native";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,13 +13,16 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
+import { useFocusEffect } from "@react-navigation/native";
+import RESTApiCall from "~/lib/RESTApiCall";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AVATAR_URI =
   "https://i.pinimg.com/originals/ef/a2/8d/efa28d18a04e7fa40ed49eeb0ab660db.jpg";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
-  const [user] = React.useState({
+  const [user, setUser] = useState({
     first_name: "John",
     last_name: "Doe",
     email: "john.doe@example.com",
@@ -54,6 +57,41 @@ export default function HomeScreen() {
     router.push("/complete-profile");
   };
 
+  const apiCall = new RESTApiCall();
+
+  useFocusEffect(
+    useCallback(() => {
+      const controller = new AbortController();
+      const { signal } = controller;
+
+      const fetchData = async () => {
+        try {
+          const data: string | null = await AsyncStorage.getItem(
+            "antar-app-access-data"
+          );
+          if (!data) return null;
+          const response = await apiCall.get("user/profile", {
+            signal,
+            headers: { Authorization: `Bearer ${JSON.parse(data).token}` },
+          });
+
+          if (response?.data?.success) {
+            setUser((prev) => ({ ...prev, ...response?.data?.user }));
+          }
+        } catch (error) {
+          console.error("Fetch error:", error);
+        }
+      };
+
+      fetchData();
+
+      // Cleanup on screen blur or component unmount
+      return () => {
+        controller.abort(); // Cancels the fetch
+      };
+    }, [])
+  );
+
   return (
     <View
       className="flex-1 bg-gradient-to-b from-primary/5 to-secondary/30"
@@ -66,14 +104,14 @@ export default function HomeScreen() {
             <CardHeader className="items-center pb-4">
               <View className="relative">
                 <Avatar
-                  alt={`${user.first_name} ${user.last_name}'s Avatar`}
+                  alt={`${user?.first_name} ${user?.last_name}'s Avatar`}
                   className="w-24 h-24 border-2 border-primary/20"
                 >
                   <AvatarImage source={{ uri: AVATAR_URI }} />
                   <AvatarFallback>
                     <Text className="text-xl font-bold">
-                      {user.first_name[0]}
-                      {user.last_name[0]}
+                      {user?.first_name}
+                      {user?.last_name}
                     </Text>
                   </AvatarFallback>
                 </Avatar>
@@ -82,7 +120,7 @@ export default function HomeScreen() {
                 </View>
               </View>
               <CardTitle className="text-2xl font-bold text-center mt-4 text-antar-teal">
-                Welcome back, {user.first_name}!
+                Welcome back, {user?.first_name} {user?.last_name}!
               </CardTitle>
               <CardDescription className="text-center text-base">
                 Ready to continue your wellness transformation?

@@ -7,6 +7,9 @@ import * as React from "react";
 import { Platform } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { PortalHost } from "@rn-primitives/portal";
+import Toast from "react-native-toast-message";
+import { useAuthRedirect } from "~/lib/hooks/useAuthRedirect";
+import Loader from "~/components/custom/Loader";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -24,52 +27,62 @@ const usePlatformSpecificSetup = Platform.select({
 });
 
 export default function RootLayout() {
+  // Prevent rendering until auth check is complete
+
   usePlatformSpecificSetup();
 
-  return (
-    <ThemeProvider value={LIGHT_THEME}>
-      <StatusBar style="dark" />
-      <Stack>
-        <Stack.Screen
-          name="index"
-          options={{
-            title: "Welcome",
-            headerBackVisible: false, // Hide back button completely
-          }}
-        />
-        <Stack.Screen
-          name="register"
-          options={{
-            title: "Create Account",
-            headerBackVisible: false, // Hide back button completely
-          }}
-        />
-        <Stack.Screen
-          name="login"
-          options={{
-            title: "Sign In",
-            headerBackVisible: false, // Hide back button completely
-          }}
-        />
-        <Stack.Screen
-          name="complete-profile"
-          options={{
-            title: "Complete Your Antar Profile",
-            headerLeft: () => null, // No back button - user must complete or skip
-            gestureEnabled: false, // Disable swipe back gesture
-            headerBackVisible: false, // Hide back button completely
-          }}
-        />
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerShown: false, // Tab navigator will handle its own headers
-          }}
-        />
-      </Stack>
-      <PortalHost />
-    </ThemeProvider>
-  );
+  const { checking } = useAuthRedirect();
+  // const checking = false; // Temporarily set to false for testing
+
+  if (checking) {
+    return <Loader />;
+  } else {
+    return (
+      <ThemeProvider value={LIGHT_THEME}>
+        <StatusBar style="dark" />
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{
+              title: "Welcome",
+              headerBackVisible: false, // Hide back button completely
+            }}
+          />
+          <Stack.Screen
+            name="register"
+            options={{
+              title: "Create Account",
+              headerBackVisible: false, // Hide back button completely
+            }}
+          />
+          <Stack.Screen
+            name="login"
+            options={{
+              title: "Sign In",
+              headerBackVisible: false, // Hide back button completely
+            }}
+          />
+          <Stack.Screen
+            name="complete-profile"
+            options={{
+              title: "Complete Your Antar Profile",
+              headerLeft: () => null, // No back button - user must complete or skip
+              gestureEnabled: false, // Disable swipe back gesture
+              headerBackVisible: false, // Hide back button completely
+            }}
+          />
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerShown: false, // Tab navigator will handle its own headers
+            }}
+          />
+        </Stack>
+        <PortalHost />
+        <Toast />
+      </ThemeProvider>
+    );
+  }
 }
 
 const useIsomorphicLayoutEffect =

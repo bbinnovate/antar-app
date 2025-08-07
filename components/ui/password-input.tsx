@@ -50,7 +50,7 @@ const PasswordInput = React.forwardRef<TextInput, PasswordInputProps>(
             }
           >
             <Text className="text-lg text-muted-foreground">
-              {isPasswordVisible ? "🙈" : "👁️"}
+              {!isPasswordVisible ? "🙈" : "🐵"}
             </Text>
           </Pressable>
         </View>
