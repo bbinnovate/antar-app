@@ -59,7 +59,7 @@ export default function WelcomeScreen() {
             className="w-full h-14 rounded-2xl bg-antar-teal shadow-lg"
           >
             <Text className="font-semibold text-lg text-white">
-              Begin Your Journey
+              Continue with Email OTP
             </Text>
           </Button>
 

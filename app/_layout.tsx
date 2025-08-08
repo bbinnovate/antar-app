@@ -9,7 +9,10 @@ import { NAV_THEME } from "~/lib/constants";
 import { PortalHost } from "@rn-primitives/portal";
 import Toast from "react-native-toast-message";
 import { useAuthRedirect } from "~/lib/hooks/useAuthRedirect";
-import Loader from "~/components/custom/Loader";
+import * as SplashScreen from "expo-splash-screen";
+
+// Keep the native splash screen visible while we check auth
+SplashScreen.preventAutoHideAsync();
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -34,8 +37,16 @@ export default function RootLayout() {
   const { checking } = useAuthRedirect();
   // const checking = false; // Temporarily set to false for testing
 
+  React.useEffect(() => {
+    if (!checking) {
+      // Hide the splash screen when ready
+      SplashScreen.hideAsync();
+    }
+  }, [checking]);
+
   if (checking) {
-    return <Loader />;
+    // Render nothing while splash screen is shown
+    return null;
   } else {
     return (
       <ThemeProvider value={LIGHT_THEME}>
