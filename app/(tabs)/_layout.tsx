@@ -71,9 +71,9 @@ export default function TabLayout() {
             <Text
               style={{
                 fontSize: 10,
-                fontWeight: "600",
+                fontWeight: "700",
                 marginTop: 4,
-                color: "#6B7280",
+                color: "#1F2937",
               }}
             >
               Parivar

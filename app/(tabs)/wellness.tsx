@@ -4,27 +4,19 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import DecoratedHeader from "~/components/custom/DecoratedHeader";
 
 export default function WellnessScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View
-      className="flex-1 bg-gradient-to-b from-primary/5 to-secondary/30"
-      style={{ paddingTop: insets.top }}
-    >
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="p-6 flex flex-col gap-6">
-          {/* Header */}
-          <View className="items-center mb-6">
-            <Text className="text-4xl mb-2">🧘</Text>
-            <Text className="text-2xl font-bold text-antar-dark">
-              Wellness Journey
-            </Text>
-            <Text className="text-muted-foreground text-center mt-2">
-              Discover your inner essence through mindful practices
-            </Text>
-          </View>
+          <DecoratedHeader
+            title="Wellness Journey"
+            subtitle="Discover yourself through mindfulness"
+          />
 
           {/* Meditation Section */}
           <Card className="p-6 rounded-3xl shadow-lg bg-background/95 backdrop-blur-sm border-0">

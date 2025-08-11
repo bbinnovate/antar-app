@@ -8,6 +8,10 @@ import RESTApiCall from "~/lib/RESTApiCall";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoogleG from "~/components/icons/GoogleG";
+import BrandBackground from "~/components/custom/BrandBackground";
+import GradientCTA from "~/components/custom/GradientCTA";
+import DecoratedImageCard from "~/components/custom/DecoratedImageCard";
+const charHeader = require("~/assets/images/characters/6836290.jpg");
 
 type Step = "email" | "otp";
 
@@ -88,146 +92,140 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-gradient-to-b from-primary/5 to-secondary/30"
+      className="flex-1"
     >
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: "center",
-          paddingHorizontal: 24,
-          paddingVertical: 32,
-        }}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View>
-          {/* Header */}
-          <View className="items-center mb-8">
-            <View className="w-20 h-20 bg-antar-teal/10 rounded-full items-center justify-center mb-6">
-              <Text className="text-5xl">🧘</Text>
+      <BrandBackground>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "center",
+            paddingHorizontal: 24,
+            paddingVertical: 32,
+          }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View>
+            {/* Header - compact hero */}
+            <View className="mb-8">
+              <DecoratedImageCard imageSource={charHeader} compact />
             </View>
-            <Text className="text-3xl font-bold text-center text-antar-teal mb-2">
-              Join Antar
-            </Text>
-            <Text className="text-center text-muted-foreground text-base">
-              Continue with email OTP or Google
-            </Text>
-          </View>
 
-          {/* Email step */}
-          {step === "email" && (
-            <View className="flex flex-col gap-6">
-              <View className="bg-background/50 rounded-2xl p-4">
-                <Text className="text-sm font-medium text-antar-teal uppercase tracking-wide">
-                  Email
-                </Text>
-                <Input
-                  label="Email Address"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoComplete="email"
-                />
+            {/* Email step */}
+            {step === "email" && (
+              <View className="flex flex-col gap-6">
+                <View className="bg-background/50 rounded-2xl p-4">
+                  <Text className="text-sm font-medium text-antar-teal uppercase tracking-wide">
+                    Email
+                  </Text>
+                  <Input
+                    label="Email Address"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                  />
+                </View>
+
+                <View className="pt-2">
+                  <GradientCTA
+                    title={isLoading ? "Sending OTP..." : "Send OTP"}
+                    onPress={sendOtp}
+                    disabled={isLoading}
+                  >
+                    <View className="flex-row items-center gap-2">
+                      {isLoading && (
+                        <View className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      )}
+                      <Text className="font-semibold text-base text-white">
+                        {isLoading ? "Sending OTP..." : "Send OTP"}
+                      </Text>
+                    </View>
+                  </GradientCTA>
+                </View>
               </View>
+            )}
 
-              <View className="pt-2">
-                <Button
-                  onPress={sendOtp}
-                  disabled={isLoading}
-                  className="w-full h-14 rounded-2xl bg-antar-teal shadow-lg"
-                >
-                  <View className="flex-row items-center gap-2">
-                    {isLoading && (
-                      <View className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    )}
-                    <Text className="font-semibold text-base text-white">
-                      {isLoading ? "Sending OTP..." : "Send OTP"}
-                    </Text>
-                  </View>
-                </Button>
+            {/* OTP step */}
+            {step === "otp" && (
+              <View className="flex flex-col gap-6">
+                <View className="bg-background/50 rounded-2xl p-4">
+                  <Text className="text-sm font-medium text-antar-teal uppercase tracking-wide">
+                    Enter OTP
+                  </Text>
+                  <Input
+                    label="One-Time Password"
+                    placeholder="Enter the 6-digit code"
+                    value={otp}
+                    onChangeText={setOtp}
+                    keyboardType="numeric"
+                    autoCapitalize="none"
+                    maxLength={6}
+                  />
+                  <Text className="text-xs text-muted-foreground mt-2">
+                    Sent to {email}
+                  </Text>
+                </View>
+
+                <View className="pt-2">
+                  <GradientCTA
+                    title={isLoading ? "Verifying..." : "Verify & Continue"}
+                    onPress={verifyOtp}
+                    disabled={isLoading}
+                  >
+                    <View className="flex-row items-center gap-2">
+                      {isLoading && (
+                        <View className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      )}
+                      <Text className="font-semibold text-base text-white">
+                        {isLoading ? "Verifying..." : "Verify & Continue"}
+                      </Text>
+                    </View>
+                  </GradientCTA>
+                </View>
               </View>
-            </View>
-          )}
+            )}
 
-          {/* OTP step */}
-          {step === "otp" && (
-            <View className="flex flex-col gap-6">
-              <View className="bg-background/50 rounded-2xl p-4">
-                <Text className="text-sm font-medium text-antar-teal uppercase tracking-wide">
-                  Enter OTP
-                </Text>
-                <Input
-                  label="One-Time Password"
-                  placeholder="Enter the 6-digit code"
-                  value={otp}
-                  onChangeText={setOtp}
-                  keyboardType="numeric"
-                  autoCapitalize="none"
-                  maxLength={6}
-                />
-                <Text className="text-xs text-muted-foreground mt-2">
-                  Sent to {email}
-                </Text>
-              </View>
-
-              <View className="pt-2">
-                <Button
-                  onPress={verifyOtp}
-                  disabled={isLoading}
-                  className="w-full h-14 rounded-2xl bg-antar-teal shadow-lg"
-                >
-                  <View className="flex-row items-center gap-2">
-                    {isLoading && (
-                      <View className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    )}
-                    <Text className="font-semibold text-base text-white">
-                      {isLoading ? "Verifying..." : "Verify & Continue"}
-                    </Text>
-                  </View>
-                </Button>
-              </View>
-            </View>
-          )}
-
-          {/* Divider */}
-          <View className="flex-row items-center py-6">
-            <View className="flex-1 h-px bg-border" />
-            <Text className="px-6 text-xs text-muted-foreground uppercase tracking-wide">
-              Or
-            </Text>
-            <View className="flex-1 h-px bg-border" />
-          </View>
-
-          {/* Google */}
-          <Button
-            onPress={googleSignin}
-            className="w-full h-14 rounded-2xl bg-white border border-border"
-          >
-            <View className="flex-row items-center gap-2">
-              <GoogleG size={20} />
-              <Text className="font-semibold text-base text-antar-dark">
-                Continue with Google
+            {/* Divider */}
+            <View className="flex-row items-center py-6">
+              <View className="flex-1 h-px bg-border" />
+              <Text className="px-6 text-xs text-muted-foreground uppercase tracking-wide">
+                Or
               </Text>
+              <View className="flex-1 h-px bg-border" />
             </View>
-          </Button>
 
-          {/* Footer */}
-          <View className="flex-row justify-center items-center pb-2 mt-4">
-            <Text className="text-muted-foreground">
-              Already have an account?{" "}
-            </Text>
+            {/* Google */}
             <Button
-              variant="link"
-              onPress={() => router.push("/login")}
-              className="p-0 h-auto"
+              onPress={googleSignin}
+              className="w-full h-14 rounded-2xl bg-white border border-border"
             >
-              <Text className="text-primary font-semibold">Sign In</Text>
+              <View className="flex-row items-center gap-2">
+                <GoogleG size={20} />
+                <Text className="font-semibold text-base text-antar-dark">
+                  Continue with Google
+                </Text>
+              </View>
             </Button>
+
+            {/* Footer */}
+            <View className="flex-row justify-center items-center pb-2 mt-4">
+              <Text className="text-muted-foreground">
+                Already have an account?{" "}
+              </Text>
+              <Button
+                variant="link"
+                onPress={() => router.push("/login")}
+                className="p-0 h-auto"
+              >
+                <Text className="text-primary font-semibold">Sign In</Text>
+              </Button>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </BrandBackground>
     </KeyboardAvoidingView>
   );
 }

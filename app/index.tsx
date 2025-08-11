@@ -3,23 +3,36 @@ import { View } from "react-native";
 import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import BrandBackground from "~/components/custom/BrandBackground";
+import GradientCTA from "~/components/custom/GradientCTA";
+import OnboardingCarousel from "~/components/custom/OnboardingCarousel";
+const character1 = require("~/assets/images/characters/6836290.jpg");
+const character2 = require("~/assets/images/characters/6836397.jpg");
 
 export default function WelcomeScreen() {
   return (
-    <View className="flex-1 bg-gradient-to-b from-primary/5 to-secondary/30">
+    <BrandBackground>
       <View className="flex-1 justify-center px-6 py-8">
         {/* Header Section */}
         <View className="items-center mb-10">
           {/* Hero Logo/Icon */}
-          <View className="w-24 h-24 bg-antar-teal/10 rounded-full items-center justify-center mb-6">
-            <Text className="text-5xl">🧘</Text>
-          </View>
           <Text className="text-4xl font-bold text-center text-antar-teal mb-4">
-            Antar
+            ANTAR
           </Text>
           <Text className="text-center text-muted-foreground text-lg leading-6 px-4">
             Your inner essence. Your wellness journey. Your transformation.
           </Text>
+        </View>
+
+        {/* Onboarding Carousel */}
+        <View className="mb-8 -mx-6">
+          <OnboardingCarousel
+            slides={[
+              { key: "s1", image: character1, title: "", subtitle: "" },
+              { key: "s2", image: character2, title: "", subtitle: "" },
+            ]}
+            compact
+          />
         </View>
 
         {/* Feature highlights */}
@@ -54,14 +67,10 @@ export default function WelcomeScreen() {
 
         {/* Action Buttons */}
         <View className="flex flex-col gap-2">
-          <Button
+          <GradientCTA
+            title="Continue with Email OTP"
             onPress={() => router.push("/register")}
-            className="w-full h-14 rounded-2xl bg-antar-teal shadow-lg"
-          >
-            <Text className="font-semibold text-lg text-white">
-              Continue with Email OTP
-            </Text>
-          </Button>
+          />
 
           {/* Divider */}
           <View className="flex-row items-center py-2">
@@ -86,6 +95,6 @@ export default function WelcomeScreen() {
           </View>
         </View>
       </View>
-    </View>
+    </BrandBackground>
   );
 }

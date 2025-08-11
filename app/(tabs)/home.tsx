@@ -14,6 +14,7 @@ import {
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { Progress } from "~/components/ui/progress";
+import DecoratedHeader from "~/components/custom/DecoratedHeader";
 import { useFocusEffect } from "@react-navigation/native";
 import RESTApiCall from "~/lib/RESTApiCall";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -94,40 +95,14 @@ export default function HomeScreen() {
   );
 
   return (
-    <View
-      className="flex-1 bg-gradient-to-b from-primary/5 to-secondary/30"
-      style={{ paddingTop: insets.top }}
-    >
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="p-6 flex flex-col gap-6">
-          {/* Welcome Section */}
-          <Card className="p-6 rounded-3xl shadow-lg bg-background/95 backdrop-blur-sm border-0">
-            <CardHeader className="items-center pb-4">
-              <View className="relative">
-                <Avatar
-                  alt={`${user?.first_name} ${user?.last_name}'s Avatar`}
-                  className="w-24 h-24 border-2 border-primary/20"
-                >
-                  <AvatarImage source={{ uri: AVATAR_URI }} />
-                  <AvatarFallback>
-                    <Text className="text-xl font-bold">
-                      {user?.first_name}
-                      {user?.last_name}
-                    </Text>
-                  </AvatarFallback>
-                </Avatar>
-                <View className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full items-center justify-center border-2 border-background">
-                  <Text className="text-white text-xs">✓</Text>
-                </View>
-              </View>
-              <CardTitle className="text-2xl font-bold text-center mt-4 text-antar-teal">
-                Welcome back, {user?.first_name} {user?.last_name}!
-              </CardTitle>
-              <CardDescription className="text-center text-base">
-                Ready to continue your wellness transformation?
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          {/* Reference-style teal header */}
+          <DecoratedHeader
+            title={`Hello ${user?.first_name}, what can I do for you today?`}
+            subtitle="Start a quick practice or view your profile"
+          />
 
           {/* Dashboard Highlights (from Dashboard screen) */}
           <Card className="p-6 rounded-3xl shadow-lg bg-background/95 backdrop-blur-sm border-0">
