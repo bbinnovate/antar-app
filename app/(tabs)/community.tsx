@@ -112,7 +112,7 @@ export default function CommunityScreen() {
                 <CardContent className="flex flex-col gap-3">
                   {/* User Info */}
                   <View className="flex-row items-center gap-3">
-                    <Avatar className="w-10 h-10">
+                    <Avatar className="w-10 h-10" alt={post.user}>
                       <AvatarImage source={{ uri: post.avatar }} />
                       <AvatarFallback>
                         <Text className="text-sm font-medium">
