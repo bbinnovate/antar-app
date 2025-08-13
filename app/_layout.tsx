@@ -7,7 +7,7 @@ import * as React from "react";
 import { Platform } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { PortalHost } from "@rn-primitives/portal";
-import Toast from "react-native-toast-message";
+import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import { useAuthRedirect } from "~/lib/hooks/useAuthRedirect";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -90,7 +90,49 @@ export default function RootLayout() {
           />
         </Stack>
         <PortalHost />
-        <Toast />
+        <Toast
+          position="top"
+          topOffset={Platform.OS === "ios" ? 64 : 24}
+          visibilityTime={2500}
+          config={{
+            success: (props) => (
+              <BaseToast
+                {...props}
+                style={{
+                  backgroundColor: "#262020", // Antar Dark
+                  borderLeftColor: "#FF772F", // Antar Orange accent
+                  borderLeftWidth: 6,
+                }}
+                text1Style={{ color: "white" }}
+                text2Style={{ color: "#FCE0E5" }}
+              />
+            ),
+            error: (props) => (
+              <ErrorToast
+                {...props}
+                style={{
+                  backgroundColor: "#262020",
+                  borderLeftColor: "#FF772F",
+                  borderLeftWidth: 6,
+                }}
+                text1Style={{ color: "white" }}
+                text2Style={{ color: "#FCE0E5" }}
+              />
+            ),
+            info: (props) => (
+              <BaseToast
+                {...props}
+                style={{
+                  backgroundColor: "#262020",
+                  borderLeftColor: "#FF772F",
+                  borderLeftWidth: 6,
+                }}
+                text1Style={{ color: "white" }}
+                text2Style={{ color: "#FCE0E5" }}
+              />
+            ),
+          }}
+        />
       </ThemeProvider>
     );
   }

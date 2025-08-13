@@ -33,7 +33,9 @@ export function useAuthRedirect() {
         const isAuthenticated = await CheckAuthUser();
 
         if (isAuthenticated) {
-          if (segments[0] !== "(tabs)") {
+          // Allow staying on complete-profile if user just signed up
+          const isOnCompleteProfile = segments[0] === "complete-profile";
+          if (!isOnCompleteProfile && segments[0] !== "(tabs)") {
             router.replace("/(tabs)/home");
           }
         } else {

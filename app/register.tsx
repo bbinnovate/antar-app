@@ -74,7 +74,7 @@ export default function RegisterScreen() {
           JSON.stringify(storeData)
         );
         Toast.show({ type: "success", text1: "Welcome to Antar" });
-        router.replace("/(tabs)/home");
+        router.replace("/complete-profile");
       } else {
         Toast.show({ type: "error", text1: res?.data?.error || "Invalid OTP" });
       }

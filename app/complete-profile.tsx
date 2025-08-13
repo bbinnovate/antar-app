@@ -4,17 +4,25 @@ import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
+import Toast from "react-native-toast-message";
 
 interface FormData {
-  address: string;
+  first_name: string;
+  last_name: string;
   gender: string;
   age: string;
+  activity_level: "sedentary" | "light" | "moderate" | "active" | "";
+  health_conditions: string[];
+  goals: string[];
 }
 
 interface FormErrors {
-  address?: string;
+  first_name?: string;
+  last_name?: string;
   gender?: string;
   age?: string;
+  activity_level?: string;
+  goals?: string;
 }
 
 const GENDER_OPTIONS = [
@@ -24,22 +32,116 @@ const GENDER_OPTIONS = [
   { label: "Prefer not to say", value: "prefer_not_to_say" },
 ];
 
+const ACTIVITY_LEVEL_OPTIONS = [
+  { label: "Sedentary", value: "sedentary" },
+  { label: "Light", value: "light" },
+  { label: "Moderate", value: "moderate" },
+  { label: "Active", value: "active" },
+];
+
+const HEALTH_CONDITIONS_OPTIONS = [
+  { label: "None", value: "none" },
+  { label: "Diabetes", value: "diabetes" },
+  { label: "Hypertension", value: "hypertension" },
+  { label: "Obesity", value: "obesity" },
+  { label: "Joint Pain", value: "joint_pain" },
+  { label: "Stress/Anxiety", value: "stress_anxiety" },
+];
+
+const GOAL_OPTIONS = [
+  { label: "Weight Loss", value: "weight_loss" },
+  { label: "Stress Reduction", value: "stress_reduction" },
+  { label: "Strength", value: "strength" },
+  { label: "Flexibility", value: "flexibility" },
+  { label: "Better Sleep", value: "better_sleep" },
+  { label: "Stamina", value: "stamina" },
+];
+
+type EditableField =
+  | "first_name"
+  | "last_name"
+  | "gender"
+  | "age"
+  | "activity_level";
+
 export default function CompleteProfileScreen() {
   const [formData, setFormData] = React.useState<FormData>({
-    address: "",
+    first_name: "",
+    last_name: "",
     gender: "",
     age: "",
+    activity_level: "",
+    health_conditions: [],
+    goals: [],
   });
 
   const [errors, setErrors] = React.useState<FormErrors>({});
   const [isLoading, setIsLoading] = React.useState(false);
   const [showGenderOptions, setShowGenderOptions] = React.useState(false);
+  const totalSteps = 6; // first, last, age, gender, activity, goals
+
+  const completionCount = React.useMemo(() => {
+    let count = 0;
+    if (formData.first_name.trim()) count += 1;
+    if (formData.last_name.trim()) count += 1;
+    if (formData.gender.trim()) count += 1;
+    if (formData.age.trim()) count += 1;
+    if (formData.activity_level) count += 1;
+    if (formData.goals.length > 0) count += 1;
+    return count;
+  }, [formData]);
+
+  const completionPercent = Math.round((completionCount / totalSteps) * 100);
+
+  const getCohort = React.useCallback(() => {
+    const ageNum = parseInt(formData.age);
+    const hasChronic = formData.health_conditions.some((c) =>
+      ["diabetes", "hypertension", "obesity", "joint_pain"].includes(c)
+    );
+    const isActive = formData.activity_level === "active";
+    const isModerate = formData.activity_level === "moderate";
+    const optimizationGoals = formData.goals.some((g) =>
+      ["stamina", "strength", "flexibility"].includes(g)
+    );
+
+    if (hasChronic || ageNum >= 50) {
+      return {
+        name: "Seasoned",
+        description: "Managing chronic conditions, need guided support",
+      };
+    }
+
+    if (isActive && !hasChronic && optimizationGoals) {
+      return {
+        name: "Pro",
+        description: "Active individual aiming to optimize health",
+      };
+    }
+
+    if (
+      (formData.activity_level === "sedentary" || !formData.activity_level) &&
+      !hasChronic
+    ) {
+      return {
+        name: "Rookie",
+        description: "Beginner starting the wellness journey",
+      };
+    }
+
+    return {
+      name: "Amateur",
+      description: "Mild lifestyle issues, looking for maintenance",
+    };
+  }, [formData]);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!formData.address.trim()) {
-      newErrors.address = "Address is required";
+    if (!formData.first_name.trim()) {
+      newErrors.first_name = "First name is required";
+    }
+    if (!formData.last_name.trim()) {
+      newErrors.last_name = "Last name is required";
     }
 
     if (!formData.gender.trim()) {
@@ -55,6 +157,14 @@ export default function CompleteProfileScreen() {
       }
     }
 
+    if (!formData.activity_level) {
+      newErrors.activity_level = "Select your activity level";
+    }
+
+    if (formData.goals.length === 0) {
+      newErrors.goals = "Choose at least one goal";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -64,22 +174,19 @@ export default function CompleteProfileScreen() {
 
     setIsLoading(true);
     try {
-      // TODO: Implement actual profile completion API call
-      console.log("Profile completion data:", formData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Navigate to home screen after successful profile completion
+      // Demo-only: simulate completion, show XP, and navigate
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      Toast.show({ type: "success", text1: "Profile completed! +50 XP" });
       router.replace("/(tabs)/home");
     } catch (error) {
       console.error("Profile completion error:", error);
+      Toast.show({ type: "error", text1: "Something went wrong" });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateFormData = (field: keyof FormData, value: string) => {
+  const updateFormData = (field: EditableField, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {
@@ -93,6 +200,29 @@ export default function CompleteProfileScreen() {
     );
     updateFormData("gender", selectedOption?.label || value);
     setShowGenderOptions(false);
+  };
+
+  const toggleCondition = (value: string) => {
+    setFormData((prev) => {
+      const exists = prev.health_conditions.includes(value);
+      const next =
+        value === "none"
+          ? ["none"]
+          : exists
+          ? prev.health_conditions.filter((c) => c !== value)
+          : [...prev.health_conditions.filter((c) => c !== "none"), value];
+      return { ...prev, health_conditions: next };
+    });
+  };
+
+  const toggleGoal = (value: string) => {
+    setFormData((prev) => {
+      const exists = prev.goals.includes(value);
+      const next = exists
+        ? prev.goals.filter((g) => g !== value)
+        : [...prev.goals, value];
+      return { ...prev, goals: next };
+    });
   };
 
   const handleSkip = () => {
@@ -114,49 +244,88 @@ export default function CompleteProfileScreen() {
         }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[0]}
       >
+        <View className="bg-background/95 border-b border-antar-teal/10 px-4 py-3">
+          <View className="w-full bg-secondary/50 rounded-full h-2">
+            <View
+              className="bg-antar-teal h-2 rounded-full"
+              style={{ width: `${Math.max(10, completionPercent)}%` }}
+            />
+          </View>
+          <Text className="text-[11px] text-muted-foreground mt-1">
+            {completionPercent}% complete • Earn {completionPercent * 1} XP
+          </Text>
+          <View className="mt-3 bg-antar-teal/10 border border-antar-teal/20 rounded-2xl p-4">
+            <Text className="text-sm font-medium text-antar-teal uppercase tracking-wide mb-2">
+              Your Cohort
+            </Text>
+            <View className="flex-row items-center gap-3">
+              <View className="w-8 h-8 rounded-full bg-antar-teal items-center justify-center">
+                <Text className="text-white text-sm">🏅</Text>
+              </View>
+              <View className="flex-1">
+                <Text className="text-sm font-semibold text-antar-dark">
+                  {getCohort().name}
+                </Text>
+                <Text
+                  className="text-xs text-muted-foreground"
+                  numberOfLines={1}
+                >
+                  {getCohort().description}
+                </Text>
+              </View>
+              <View className="px-2 py-0.5 rounded-full bg-white border border-antar-teal/30">
+                <Text className="text-antar-teal text-[10px] font-semibold">
+                  +{completionPercent} XP
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
         <View>
           {/* Header Section */}
-          <View className="items-center mb-8">
-            <View className="w-20 h-20 bg-antar-teal/10 rounded-full items-center justify-center mb-4">
-              <Text className="text-5xl">🧘</Text>
-            </View>
+          {/* <View className="items-center mb-8">
             <Text className="text-3xl font-bold text-center text-antar-teal mb-2">
               Complete Your Profile
             </Text>
             <Text className="text-center text-muted-foreground text-base">
               Personalize your holistic wellness experience
             </Text>
-
-            {/* Progress bar */}
-            <View className="w-full bg-secondary/50 rounded-full h-2 mt-4 max-w-xs">
-              <View
-                className="bg-antar-teal h-2 rounded-full"
-                style={{ width: "75%" }}
-              />
-            </View>
-            <Text className="text-xs text-muted-foreground mt-2">
-              Step 2 of 2
-            </Text>
-          </View>
+          </View> */}
 
           {/* Form Content */}
-          <View className="flex flex-col gap-6">
+          <View className="flex flex-col gap-6 mt-6">
             {/* Personal Details Section */}
             <View className="bg-background/50 rounded-2xl p-4 flex flex-col gap-4">
               <Text className="text-sm font-medium text-antar-teal uppercase tracking-wide">
                 Personal Details
               </Text>
-              <Input
-                label="Address"
-                placeholder="Enter your full address"
-                value={formData.address}
-                onChangeText={(value) => updateFormData("address", value)}
-                error={errors.address}
-                multiline
-                numberOfLines={3}
-                autoCapitalize="words"
-              />
+              <View className="flex-row gap-3">
+                <View className="flex-1">
+                  <Input
+                    label="First Name"
+                    placeholder="Your first name"
+                    value={formData.first_name}
+                    onChangeText={(value) =>
+                      updateFormData("first_name", value)
+                    }
+                    error={errors.first_name}
+                    autoCapitalize="words"
+                  />
+                </View>
+                <View className="flex-1">
+                  <Input
+                    label="Last Name"
+                    placeholder="Your last name"
+                    value={formData.last_name}
+                    onChangeText={(value) => updateFormData("last_name", value)}
+                    error={errors.last_name}
+                    autoCapitalize="words"
+                  />
+                </View>
+              </View>
 
               <View className="flex-row gap-3">
                 <View className="flex-1">
@@ -166,7 +335,7 @@ export default function CompleteProfileScreen() {
                   <Button
                     variant="outline"
                     onPress={() => setShowGenderOptions(!showGenderOptions)}
-                    className="w-full justify-start h-12 rounded-xl"
+                    className="w-full justify-start h-12 rounded-xl items-start"
                   >
                     <Text
                       className={
@@ -191,7 +360,7 @@ export default function CompleteProfileScreen() {
                           key={option.value}
                           variant="ghost"
                           onPress={() => handleGenderSelect(option.value)}
-                          className="w-full justify-start rounded-none border-b border-input last:border-b-0"
+                          className="w-full justify-start items-start rounded-none border-b border-input last:border-b-0"
                         >
                           <Text>{option.label}</Text>
                         </Button>
@@ -212,6 +381,119 @@ export default function CompleteProfileScreen() {
                 </View>
               </View>
             </View>
+
+            {/* Wellness Profile Section */}
+            <View className="bg-background/50 rounded-2xl p-4 flex flex-col gap-4">
+              <Text className="text-sm font-medium text-antar-teal uppercase tracking-wide">
+                Wellness Profile
+              </Text>
+
+              {/* Activity Level */}
+              <View>
+                <Text className="text-sm font-medium text-foreground mb-2">
+                  Activity Level
+                </Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {ACTIVITY_LEVEL_OPTIONS.map((opt) => {
+                    const selected = formData.activity_level === opt.value;
+                    return (
+                      <Button
+                        key={opt.value}
+                        variant={selected ? "default" : "outline"}
+                        onPress={() =>
+                          updateFormData("activity_level", opt.value)
+                        }
+                        className={`h-10 rounded-full px-4 ${
+                          selected ? "bg-antar-teal" : ""
+                        }`}
+                      >
+                        <Text
+                          className={
+                            selected ? "text-white" : "text-foreground"
+                          }
+                        >
+                          {opt.label}
+                        </Text>
+                      </Button>
+                    );
+                  })}
+                </View>
+                {errors.activity_level && (
+                  <Text className="mt-1 text-sm text-destructive">
+                    {errors.activity_level}
+                  </Text>
+                )}
+              </View>
+
+              {/* Health Conditions */}
+              <View>
+                <Text className="text-sm font-medium text-foreground mb-2">
+                  Health Conditions
+                </Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {HEALTH_CONDITIONS_OPTIONS.map((opt) => {
+                    const selected = formData.health_conditions.includes(
+                      opt.value
+                    );
+                    return (
+                      <Button
+                        key={opt.value}
+                        variant={selected ? "default" : "outline"}
+                        onPress={() => toggleCondition(opt.value)}
+                        className={`h-10 rounded-full px-4 ${
+                          selected ? "bg-antar-teal" : ""
+                        }`}
+                      >
+                        <Text
+                          className={
+                            selected ? "text-white" : "text-foreground"
+                          }
+                        >
+                          {opt.label}
+                        </Text>
+                      </Button>
+                    );
+                  })}
+                </View>
+              </View>
+
+              {/* Goals */}
+              <View>
+                <Text className="text-sm font-medium text-foreground mb-2">
+                  Goals
+                </Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {GOAL_OPTIONS.map((opt) => {
+                    const selected = formData.goals.includes(opt.value);
+                    return (
+                      <Button
+                        key={opt.value}
+                        variant={selected ? "default" : "outline"}
+                        onPress={() => toggleGoal(opt.value)}
+                        className={`h-10 rounded-full px-4 ${
+                          selected ? "bg-antar-teal" : ""
+                        }`}
+                      >
+                        <Text
+                          className={
+                            selected ? "text-white" : "text-foreground"
+                          }
+                        >
+                          {opt.label}
+                        </Text>
+                      </Button>
+                    );
+                  })}
+                </View>
+                {errors.goals && (
+                  <Text className="mt-1 text-sm text-destructive">
+                    {errors.goals}
+                  </Text>
+                )}
+              </View>
+            </View>
+
+            {/* Cohort Preview moved to sticky header */}
 
             {/* Action Buttons */}
             <View className="pt-6 flex flex-col gap-4">
