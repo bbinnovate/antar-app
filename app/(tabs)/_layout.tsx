@@ -46,11 +46,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="wellness"
+        name="sessions"
         options={{
-          title: "Wellness",
+          title: "Sessions",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="🧘" color={color} focused={focused} />
+            <TabBarIcon name="📆" color={color} focused={focused} />
           ),
         }}
       />
@@ -82,11 +82,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="community"
+        name="plans"
         options={{
-          title: "Community",
+          title: "Plans",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="👥" color={color} focused={focused} />
+            <TabBarIcon name="📦" color={color} focused={focused} />
           ),
         }}
       />
@@ -99,6 +99,9 @@ export default function TabLayout() {
           ),
         }}
       />
+      {/* Keep these routes in codebase but hide from tab bar */}
+      <Tabs.Screen name="community" options={{ href: null }} />
+      <Tabs.Screen name="wellness" options={{ href: null }} />
     </Tabs>
   );
 }
