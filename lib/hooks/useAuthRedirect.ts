@@ -30,7 +30,7 @@ export function useAuthRedirect() {
           return;
         }
 
-        const isAuthenticated = await CheckAuthUser();
+        const {isAuthenticated, completeProfile} = await CheckAuthUser();
 
         if (isAuthenticated) {
           // Allow staying on complete-profile if user just signed up
