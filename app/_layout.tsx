@@ -88,6 +88,54 @@ export default function RootLayout() {
               headerShown: false, // Tab navigator will handle its own headers
             }}
           />
+          <Stack.Screen
+            name="ailment/gut-health"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
+          <Stack.Screen
+            name="ailment/bone-joint"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
+          <Stack.Screen
+            name="ailment/metabolic"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
+          <Stack.Screen
+            name="ailment/womens-health"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
+          <Stack.Screen
+            name="ailment/cardiovascular"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
+          <Stack.Screen
+            name="ailment/liver-kidney"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
+          <Stack.Screen
+            name="ailment/neurological"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
+          <Stack.Screen
+            name="ailment/skin-health"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
         </Stack>
         <PortalHost />
         <Toast
