@@ -81,11 +81,11 @@ export default function LoginScreen() {
           "antar-app-access-data",
           JSON.stringify(storeData)
         );
-        Toast.show({
-          type: "success",
-          text1: "Login successful",
-          text2: "Welcome back! Redirecting to your dashboard.",
-        });
+        // Toast.show({
+        //   type: "success",
+        //   text1: "Login successful",
+        //   text2: "Welcome back! Redirecting to your dashboard.",
+        // });
         // Navigate to parivar after successful login
         router.replace("/(tabs)/parivar");
       }

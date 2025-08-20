@@ -412,6 +412,110 @@ export default function PhysiotherapyScreen() {
             </Card>
           </Section>
 
+          <Section title="💬 Our Success Stories">
+            <View className="flex flex-col gap-3">
+              <Card className="border-antar-teal/20 bg-antar-teal/5">
+                <CardContent className="p-4">
+                  <Text className="font-semibold text-antar-dark mb-1 text-sm">
+                    ACL Reconstruction Rehabilitation - Sports Excellence
+                  </Text>
+                  <Text className="text-muted-foreground text-sm mb-3 italic">
+                    "I wasn't sure if recovery after ACL surgery could really
+                    happen online, but this program changed my perspective.
+                    Every session was guided, encouraging and tailored to my
+                    pace."
+                  </Text>
+                  <Text className="font-semibold text-antar-dark text-xs">
+                    Rohan D, 26 years - Football Player
+                  </Text>
+                </CardContent>
+              </Card>
+
+              <Card className="border-antar-orange/20 bg-antar-orange/5">
+                <CardContent className="p-4">
+                  <Text className="font-semibold text-antar-dark mb-1 text-sm">
+                    Desk Job Posture Correction – Ergonomic Rehabilitation
+                  </Text>
+                  <Text className="text-muted-foreground text-sm mb-3 italic">
+                    "Years of desk work had left me with constant neck and upper
+                    back pain. I felt disconnected from my own body. My offline
+                    sessions with pain relieving modalities had become a part of
+                    my monthly routine."
+                  </Text>
+                  <Text className="font-semibold text-antar-dark text-xs">
+                    Ananya S, 34 years - UX Designer
+                  </Text>
+                </CardContent>
+              </Card>
+
+              <Card className="border-antar-pink/30 bg-antar-pink/10">
+                <CardContent className="p-4">
+                  <Text className="font-semibold text-antar-dark mb-1 text-sm">
+                    Geriatric Fall Prevention – Evidence-Based Mobility Training
+                  </Text>
+                  <Text className="text-muted-foreground text-sm mb-3 italic">
+                    "After my fall, I lost not just balance - but confidence.
+                    Thankfully I didn't get injured but it was alarming that my
+                    body needed expert care with aging and decreased strength."
+                  </Text>
+                  <Text className="font-semibold text-antar-dark text-xs">
+                    Mr. Vasant N, 70 years - Retired Professor
+                  </Text>
+                </CardContent>
+              </Card>
+
+              <Card className="border-antar-teal/20 bg-antar-teal/5">
+                <CardContent className="p-4">
+                  <Text className="font-semibold text-antar-dark mb-1 text-sm">
+                    Postnatal Core Recovery – Diastasis Recti Rehab
+                  </Text>
+                  <Text className="text-muted-foreground text-sm mb-3 italic">
+                    "I felt sharp shooting pain every time I sneezed or coughed
+                    after giving birth. This online program was a gentle anchor.
+                    With care and understanding, I was guided to reconnect with
+                    my body."
+                  </Text>
+                  <Text className="font-semibold text-antar-dark text-xs">
+                    Shaheen A, 30 years - New Mother
+                  </Text>
+                </CardContent>
+              </Card>
+
+              <Card className="border-antar-orange/20 bg-antar-orange/5">
+                <CardContent className="p-4">
+                  <Text className="font-semibold text-antar-dark mb-1 text-sm">
+                    Cervical Spondylosis – Chronic Pain Protocol
+                  </Text>
+                  <Text className="text-muted-foreground text-sm mb-3 italic">
+                    "Chronic neck pain had become my norm - until I found this
+                    program. My therapist listened deeply, explained things
+                    clearly and crafted exercises that brought real relief."
+                  </Text>
+                  <Text className="font-semibold text-antar-dark text-xs">
+                    Rajeev T, 45 years - Team Leader
+                  </Text>
+                </CardContent>
+              </Card>
+
+              <Card className="border-antar-pink/30 bg-antar-pink/10">
+                <CardContent className="p-4">
+                  <Text className="font-semibold text-antar-dark mb-1 text-sm">
+                    Preventive Mobility – Functional Screening & Correction
+                  </Text>
+                  <Text className="text-muted-foreground text-sm mb-3 italic">
+                    "I joined because I wanted to move better. After every
+                    badminton session, I faced a bit of shoulder pain and
+                    heaviness on the right side. The therapist noticed patterns
+                    and helped me with muscular corrections."
+                  </Text>
+                  <Text className="font-semibold text-antar-dark text-xs">
+                    Deepak S, 29 years - Recreational Athlete
+                  </Text>
+                </CardContent>
+              </Card>
+            </View>
+          </Section>
+
           <Section title="📝 Frequently Asked Questions">
             <View className="flex flex-col gap-3">
               {faqs.map((faq, idx) => (

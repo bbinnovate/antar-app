@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, ScrollView, Pressable } from "react-native";
+import { View, ScrollView, Pressable, Linking } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -190,7 +190,14 @@ export default function OfferingsScreen() {
                 </View>
               </View>
 
-              <Button className="w-full bg-antar-teal">
+              <Button
+                className="w-full bg-antar-teal"
+                onPress={() =>
+                  Linking.openURL(
+                    "https://knowtheantar.com/pages/ailment-management"
+                  )
+                }
+              >
                 <Text className="font-semibold text-white">
                   Get Free Consultation
                 </Text>
@@ -231,10 +238,11 @@ export default function OfferingsScreen() {
                 Personalized nutrition plans that heal, nourish, and support
                 your body's natural processes
               </Text>
-              <Button className="w-full bg-antar-orange">
-                <Text className="font-semibold text-white">
-                  Explore Nutrition
-                </Text>
+              <Button
+                className="w-full bg-antar-orange"
+                onPress={() => router.push("/nutrition")}
+              >
+                <Text className="font-semibold text-white">Learn More</Text>
               </Button>
             </CardContent>
           </Card>

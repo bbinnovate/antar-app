@@ -57,6 +57,7 @@ export default function RootLayout() {
             options={{
               title: "Welcome",
               headerBackVisible: false, // Hide back button completely
+              gestureEnabled: false, // Disable swipe back gesture
             }}
           />
           <Stack.Screen
@@ -64,6 +65,8 @@ export default function RootLayout() {
             options={{
               title: "Create Account",
               headerBackVisible: false, // Hide back button completely
+              gestureEnabled: false, // Disable swipe back gesture
+              headerLeft: () => null, // No back button
             }}
           />
           <Stack.Screen
@@ -71,6 +74,8 @@ export default function RootLayout() {
             options={{
               title: "Sign In",
               headerBackVisible: false, // Hide back button completely
+              gestureEnabled: false, // Disable swipe back gesture
+              headerLeft: () => null, // No back button
             }}
           />
           <Stack.Screen
@@ -86,6 +91,7 @@ export default function RootLayout() {
             name="(tabs)"
             options={{
               headerShown: false, // Tab navigator will handle its own headers
+              gestureEnabled: false, // Disable swipe back to auth screens
             }}
           />
           <Stack.Screen
@@ -138,6 +144,12 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="physiotherapy"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
+          <Stack.Screen
+            name="nutrition"
             options={{
               headerShown: false, // Custom header in component
             }}
