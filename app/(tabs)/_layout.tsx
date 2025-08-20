@@ -37,24 +37,6 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="🏠" color={color} focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="sessions"
-        options={{
-          title: "Sessions",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="📆" color={color} focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="parivar"
         options={{
           title: "Parivar",
@@ -63,30 +45,25 @@ export default function TabLayout() {
               imageSource={profileLogo}
               color={color}
               focused={focused}
-              emphasized
-              suppressFocusStyle
             />
-          ),
-          tabBarLabel: () => (
-            <Text
-              style={{
-                fontSize: 10,
-                fontWeight: "700",
-                marginTop: 4,
-                color: "#1F2937",
-              }}
-            >
-              Parivar
-            </Text>
           ),
         }}
       />
       <Tabs.Screen
-        name="plans"
+        name="offerings"
         options={{
-          title: "Plans",
+          title: "Offerings",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="📦" color={color} focused={focused} />
+            <TabBarIcon name="✨" color={color} focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="insights"
+        options={{
+          title: "Insights",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name="🧠" color={color} focused={focused} />
           ),
         }}
       />
@@ -100,6 +77,9 @@ export default function TabLayout() {
         }}
       />
       {/* Keep these routes in codebase but hide from tab bar */}
+      <Tabs.Screen name="home" options={{ href: null }} />
+      <Tabs.Screen name="sessions" options={{ href: null }} />
+      <Tabs.Screen name="plans" options={{ href: null }} />
       <Tabs.Screen name="community" options={{ href: null }} />
       <Tabs.Screen name="wellness" options={{ href: null }} />
     </Tabs>

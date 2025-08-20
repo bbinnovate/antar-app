@@ -177,7 +177,7 @@ export default function CompleteProfileScreen() {
       // Demo-only: simulate completion, show XP, and navigate
       await new Promise((resolve) => setTimeout(resolve, 600));
       Toast.show({ type: "success", text1: "Profile completed! +50 XP" });
-      router.replace("/(tabs)/home");
+      router.replace("/(tabs)/parivar");
     } catch (error) {
       console.error("Profile completion error:", error);
       Toast.show({ type: "error", text1: "Something went wrong" });

@@ -78,6 +78,11 @@ export default function ParivarScreen() {
               title: "WhatsApp community",
               desc: "Private, supportive group",
             },
+            {
+              icon: "🎯",
+              title: "Personalized plans",
+              desc: "Custom wellness journeys",
+            },
           ].map((b, idx) => (
             <View key={idx} className="w-[48%] mb-3">
               <View className="p-4 rounded-2xl bg-white/60 border border-white/40 h-24 justify-center">
@@ -130,6 +135,7 @@ export default function ParivarScreen() {
             "Monthly wellness toolkit",
             "24/7 chat support",
             "Private WhatsApp community access",
+            "Personalized wellness plans tailored to your goals",
           ].map((f, idx) => (
             <View key={idx} className="flex-row items-start gap-3">
               <Text className="text-xl">✅</Text>

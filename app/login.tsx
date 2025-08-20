@@ -86,8 +86,8 @@ export default function LoginScreen() {
           text1: "Login successful",
           text2: "Welcome back! Redirecting to your dashboard.",
         });
-        // Navigate to home or dashboard after successful login
-        router.replace("/(tabs)/home");
+        // Navigate to parivar after successful login
+        router.replace("/(tabs)/parivar");
       }
     } catch (error) {
       console.error("Login error:", error);

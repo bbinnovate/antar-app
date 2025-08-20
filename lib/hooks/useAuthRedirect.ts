@@ -36,7 +36,7 @@ export function useAuthRedirect() {
           // Allow staying on complete-profile if user just signed up
           const isOnCompleteProfile = segments[0] === "complete-profile";
           if (!isOnCompleteProfile && segments[0] !== "(tabs)") {
-            router.replace("/(tabs)/home");
+            router.replace("/(tabs)/parivar");
           }
         } else {
           await AsyncStorage.removeItem("antar-app-access-data");
