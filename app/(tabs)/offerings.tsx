@@ -260,7 +260,10 @@ export default function OfferingsScreen() {
                 Holistic mental health support through counseling, mindfulness,
                 and emotional balance techniques
               </Text>
-              <Button className="w-full bg-antar-pink border-antar-pink">
+              <Button
+                className="w-full bg-antar-pink border-antar-pink"
+                onPress={() => router.push("/mental-wellness")}
+              >
                 <Text className="font-semibold text-antar-dark">
                   Start Healing
                 </Text>
