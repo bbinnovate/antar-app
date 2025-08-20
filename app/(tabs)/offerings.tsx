@@ -284,7 +284,10 @@ export default function OfferingsScreen() {
                 Customized movement programs combining yoga, functional fitness,
                 and therapeutic exercises
               </Text>
-              <Button className="w-full bg-antar-teal">
+              <Button
+                className="w-full bg-antar-teal"
+                onPress={() => router.push("/optimal-movement")}
+              >
                 <Text className="font-semibold text-white">Begin Moving</Text>
               </Button>
             </CardContent>
