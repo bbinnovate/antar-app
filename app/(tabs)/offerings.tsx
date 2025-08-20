@@ -209,7 +209,10 @@ export default function OfferingsScreen() {
                 Evidence-based physical therapy treatments for movement
                 restoration and pain management
               </Text>
-              <Button className="w-full bg-antar-teal">
+              <Button
+                className="w-full bg-antar-teal"
+                onPress={() => router.push("/physiotherapy")}
+              >
                 <Text className="font-semibold text-white">Learn More</Text>
               </Button>
             </CardContent>
