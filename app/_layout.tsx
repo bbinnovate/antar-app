@@ -166,6 +166,12 @@ export default function RootLayout() {
               headerShown: false, // Custom header in component
             }}
           />
+          <Stack.Screen
+            name="liv-preventive"
+            options={{
+              headerShown: false, // Custom header in component
+            }}
+          />
         </Stack>
         <PortalHost />
         <Toast

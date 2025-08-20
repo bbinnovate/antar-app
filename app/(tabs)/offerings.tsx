@@ -377,9 +377,12 @@ export default function OfferingsScreen() {
             <Text className="text-xs text-antar-teal mb-3 font-medium">
               ✨ Cultivate longevity, immunity, and vitality
             </Text>
-            <Button className="w-full bg-antar-teal">
+            <Button
+              className="w-full bg-antar-teal"
+              onPress={() => router.push("/liv-preventive")}
+            >
               <Text className="font-semibold text-white">
-                Get Free Consultation
+                Explore L.I.V Program
               </Text>
             </Button>
           </CardContent>
