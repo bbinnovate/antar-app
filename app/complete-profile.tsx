@@ -190,10 +190,11 @@ export default function CompleteProfileScreen() {
       const response = await apiCall.put("user/profile", formData, {
         headers: { Authorization: `Bearer ${JSON.parse(data).token}` },
       });
-      // console.log("response - ", response?.data);
+      // console.log("response - PUT - ", response?.data);
       if (response?.data?.success) {
         Toast.show({ type: "success", text1: "Profile completed! +50 XP" });
       }
+      router.push("/(tabs)/home");
     } catch (error) {
       console.error("Profile completion error:", error);
       Toast.show({ type: "error", text1: "Something went wrong" });
