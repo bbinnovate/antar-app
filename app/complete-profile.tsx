@@ -194,7 +194,7 @@ export default function CompleteProfileScreen() {
       if (response?.data?.success) {
         Toast.show({ type: "success", text1: "Profile completed! +50 XP" });
       }
-      router.push("/(tabs)/home");
+      router.push("/(tabs)/parivar");
     } catch (error) {
       console.error("Profile completion error:", error);
       Toast.show({ type: "error", text1: "Something went wrong" });
@@ -244,7 +244,7 @@ export default function CompleteProfileScreen() {
 
   const handleSkip = () => {
     // User can skip profile completion and go to home screen
-    router.replace("/(tabs)/home");
+    router.replace("/(tabs)/parivar");
   };
 
   return (
