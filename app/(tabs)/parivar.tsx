@@ -290,7 +290,7 @@ const fetchScheduledSessions = async (token: string) => {
 
 export default function ParivarScreen() {
   // TODO: Replace with real subscription state from API/AsyncStorage
-  const [hasParivar, setHasParivar] = React.useState(true); // Set to true for testing API
+  const [hasParivar, setHasParivar] = React.useState(false); // Set to true for testing API
 
   // API state management
   const [sessionsData, setSessionsData] = React.useState<any>(mockApiData);
