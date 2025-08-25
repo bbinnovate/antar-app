@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View } from "react-native";
+import { View, Image } from "react-native";
 import { router } from "expo-router";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -8,17 +8,23 @@ import GradientCTA from "~/components/custom/GradientCTA";
 import OnboardingCarousel from "~/components/custom/OnboardingCarousel";
 const character1 = require("~/assets/images/characters/6836290.jpg");
 const character2 = require("~/assets/images/characters/6836397.jpg");
+const logoImage = require("~/assets/images/profileLogo.png");
 
 export default function WelcomeScreen() {
   return (
     <BrandBackground>
       <View className="flex-1 justify-center px-6 py-8">
         {/* Header Section */}
-        <View className="items-center mb-10">
-          {/* Hero Logo/Icon */}
-          <Text className="text-4xl font-bold text-center text-antar-teal mb-4">
-            ANTAR
-          </Text>
+        <View className="items-center mb-8">
+          {/* Logo and Brand Name - Horizontal */}
+          <View className="flex-row items-center justify-center mb-4">
+            <Image
+              source={logoImage}
+              className="w-12 h-12 mr-3"
+              resizeMode="contain"
+            />
+            <Text className="text-3xl font-bold text-antar-teal">ANTAR</Text>
+          </View>
           <Text className="text-center text-muted-foreground text-lg leading-6 px-4">
             Your inner essence. Your wellness journey. Your transformation.
           </Text>
