@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "~/components/ui/text";
@@ -14,6 +15,7 @@ import DecoratedHeader from "~/components/custom/DecoratedHeader";
 import Screen from "~/components/custom/Screen";
 import Section from "~/components/custom/Section";
 import GradientCTA from "~/components/custom/GradientCTA";
+const profileLogo = require("~/assets/images/profileLogo.png");
 
 const mockApiData = {
   userJourney: {
@@ -1023,38 +1025,56 @@ export default function ParivarScreen() {
   // Pre-Purchase Marketing Content
   return (
     <Screen>
-      <DecoratedHeader
-        title="Antar Parivar"
-        subtitle="Unlock guided practices, live sessions, and a nurturing community"
-      />
-
-      {/* Price + Quick CTA */}
+      {/* Combined Header + Price Card */}
       <Section>
-        <View className="w-full p-5 rounded-3xl bg-white/60 border border-white/40">
-          <View className="flex-row items-center justify-between">
-            <View>
-              <Text className="text-sm text-muted-foreground">Membership</Text>
+        <View className="w-full p-6 rounded-3xl bg-gradient-to-br from-antar-teal/8 via-antar-pink/5 to-antar-orange/8 bg-antar-teal/10">
+          {/* Header Content */}
+          <View className="mb-3">
+            <View className="flex-row items-center mb-1">
+              <Image
+                source={profileLogo}
+                style={{ width: 35, height: 35, marginRight: 8 }}
+              />
               <Text className="text-2xl font-bold text-antar-dark">
-                ₹199/month
+                Antar Parivar
               </Text>
             </View>
-            <View className="px-3 py-1 rounded-full bg-antar-teal/10 border border-antar-teal/30">
-              <Text className="text-antar-teal font-semibold">Best Value</Text>
-            </View>
+            <Text className="text-base text-muted-foreground">
+              Unlock guided practices, live sessions, and a nurturing community
+            </Text>
           </View>
-          <Text className="mt-2 text-sm text-muted-foreground">
-            Cancel anytime. No hidden fees.
-          </Text>
-          {!hasParivar ? (
-            <Button
-              className="mt-3 bg-antar-orange rounded-xl"
-              onPress={showPurchaseAlert}
-            >
-              <Text className="text-white font-semibold">
-                Unlock for ₹199/month
-              </Text>
-            </Button>
-          ) : null}
+
+          {/* Price + CTA Content */}
+          <View className="border-t border-antar-teal/20 pt-4">
+            <View className="flex-row items-center justify-between mb-3">
+              <View>
+                <Text className="text-sm text-muted-foreground">
+                  Membership
+                </Text>
+                <Text className="text-2xl font-bold text-antar-dark">
+                  ₹199/month
+                </Text>
+              </View>
+              <View className="px-3 py-1 rounded-full bg-antar-teal/10 border border-antar-teal/30">
+                <Text className="text-antar-teal font-semibold">
+                  Best Value
+                </Text>
+              </View>
+            </View>
+            <Text className="mb-4 text-sm text-muted-foreground">
+              Cancel anytime. No hidden fees.
+            </Text>
+            {!hasParivar ? (
+              <Button
+                className="bg-antar-orange rounded-xl w-full"
+                onPress={showPurchaseAlert}
+              >
+                <Text className="text-white font-semibold">
+                  Unlock for ₹199/month
+                </Text>
+              </Button>
+            ) : null}
+          </View>
         </View>
       </Section>
 
