@@ -19,7 +19,7 @@ export default function TabLayout() {
           shadowRadius: 8,
           shadowOffset: { width: 0, height: -10 },
           shadowColor: "#000",
-          height: Platform.OS === "ios" ? 90 : 70,
+          height: Platform.OS === "ios" ? 90 : 80,
           paddingBottom: Platform.OS === "ios" ? 25 : 10,
           paddingTop: 5,
           paddingHorizontal: 10,
@@ -73,6 +73,15 @@ export default function TabLayout() {
           title: "Profile",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name="👤" color={color} focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="chatbot"
+        options={{
+          title: "Chatbot",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name="💬" color={color} focused={focused} />
           ),
         }}
       />

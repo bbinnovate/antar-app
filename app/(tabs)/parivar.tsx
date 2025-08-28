@@ -15,6 +15,7 @@ import DecoratedHeader from "~/components/custom/DecoratedHeader";
 import Screen from "~/components/custom/Screen";
 import Section from "~/components/custom/Section";
 import GradientCTA from "~/components/custom/GradientCTA";
+import BestValueBadge from "~/components/custom/BestValueBadge";
 const profileLogo = require("~/assets/images/profileLogo.png");
 
 const mockApiData = {
@@ -109,6 +110,10 @@ const mockApiData = {
       actionType: "preview",
     },
   ],
+};
+
+const renderWithLineBreaks = (text: string) => {
+  return text.replace(/<br\s*\/?>/gi, "\n");
 };
 
 // Utility function to get styling based on session type and status
@@ -1027,8 +1032,9 @@ export default function ParivarScreen() {
     <Screen>
       {/* Combined Header + Price Card */}
       <Section>
-        <View className="w-full p-6 rounded-3xl bg-gradient-to-br from-antar-teal/8 via-antar-pink/5 to-antar-orange/8 bg-antar-teal/10">
+        <View className="w-full p-6 rounded-3xl bg-gradient-to-br from-antar-teal/8 via-antar-pink/5 to-antar-orange/8 bg-antar-teal/10 relative">
           {/* Header Content */}
+
           <View className="mb-3">
             <View className="flex-row items-center mb-1">
               <Image
@@ -1055,18 +1061,13 @@ export default function ParivarScreen() {
                   ₹199/month
                 </Text>
               </View>
-              <View className="px-3 py-1 rounded-full bg-antar-teal/10 border border-antar-teal/30">
-                <Text className="text-antar-teal font-semibold">
-                  Best Value
-                </Text>
-              </View>
             </View>
             <Text className="mb-4 text-sm text-muted-foreground">
               Cancel anytime. No hidden fees.
             </Text>
             {!hasParivar ? (
               <Button
-                className="bg-antar-orange rounded-xl w-full"
+                className="bg-antar-orange rounded-full w-full"
                 onPress={showPurchaseAlert}
               >
                 <Text className="text-white font-semibold">
@@ -1084,17 +1085,17 @@ export default function ParivarScreen() {
           {[
             {
               icon: "🧘",
-              title: "3x/week live",
+              title: "3x/weekly live sessions",
               desc: "Yoga, Breathwork, Mobility",
             },
             {
               icon: "🎙️",
-              title: "Monthly webinar",
+              title: "Monthly<br />webinar",
               desc: "+ Live Q&A with experts",
             },
             {
               icon: "🧰",
-              title: "Wellness toolkit",
+              title: "Wellness<br />toolkit",
               desc: "Fresh monthly resources",
             },
             {
@@ -1109,17 +1110,17 @@ export default function ParivarScreen() {
             },
             {
               icon: "🎯",
-              title: "Personalized plans",
+              title: "Personalized<br />plans",
               desc: "Custom wellness journeys",
             },
           ].map((b, idx) => (
-            <View key={idx} className="w-[48%] mb-3">
-              <View className="p-4 rounded-2xl bg-white/60 border border-white/40 h-24 justify-center">
-                <Text className="text-2xl mb-1">{b.icon}</Text>
-                <Text className="font-semibold text-antar-dark text-sm leading-tight">
-                  {b.title}
+            <View key={idx} className="w-[48%] h-auto mb-3">
+              <View className="p-3 rounded-2xl bg-white/60 h-auto border border-white/40 justify-center items-center">
+                <Text className="text-4xl mb-1">{b.icon}</Text>
+                <Text className="font-semibold text-antar-dark text-md text-center leading-tight">
+                  {renderWithLineBreaks(b.title)}
                 </Text>
-                <Text className="text-xs text-muted-foreground mt-1 leading-tight">
+                <Text className="text-xs text-muted-foreground text-center mt-1 leading-tight">
                   {b.desc}
                 </Text>
               </View>
@@ -1130,25 +1131,37 @@ export default function ParivarScreen() {
 
       {/* Weekly experience preview */}
       <Section title="Your weekly rhythm">
-        <View className="rounded-2xl overflow-hidden border border-white/40">
-          <View className="flex-row">
+        <View className="rounded-2xl overflow-hidden border border-white/40 bg-white/50 p-2">
+          {!hasParivar && (
+            <Text className="mt-2 text-sm font-bold text-antar-teal text-center">
+              Included in Antar Parivar
+            </Text>
+          )}
+          <View className="flex-row justify-between">
             {[
-              { day: "Mon", label: "Mobility • 7am" },
-              { day: "Wed", label: "Yoga • 7am" },
-              { day: "Fri", label: "Breathwork • 7am" },
+              { day: "Mon", time: "7am", label: "Mobility" },
+              { day: "Wed", time: "7am", label: "Yoga" },
+              { day: "Fri", time: "7am", label: "Breathwork" },
             ].map((s, i) => (
-              <View key={i} className="flex-1 p-4 bg-white/60">
-                <Text className="text-sm font-semibold text-antar-dark">
-                  {s.day}
-                </Text>
-                <Text className="text-xs text-muted-foreground mt-1">
+              <View
+                key={i}
+                className="flex-1 mx-1 p-4 items-center justify-center rounded-lg"
+              >
+                <View className="w-16 h-20 rounded-lg overflow-hidden items-center justify-center">
+                  <View className="bg-antar-dark h-6 w-full items-center justify-center">
+                    <Text className="text-white text-xs font-bold">
+                      {s.day}
+                    </Text>
+                  </View>
+                  <View className="bg-white flex-1 w-full items-center justify-center">
+                    <Text className="text-antar-dark text-lg font-bold">
+                      {s.time}
+                    </Text>
+                  </View>
+                </View>
+                <Text className="mt-2 text-sm font-medium text-center text-antar-dark">
                   {s.label}
                 </Text>
-                {!hasParivar ? (
-                  <Text className="mt-2 text-[11px] text-antar-teal">
-                    Included in Antar Parivar
-                  </Text>
-                ) : null}
               </View>
             ))}
           </View>
