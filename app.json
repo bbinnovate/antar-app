@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Antar",
-    "slug": "antar",
+    "slug": "antar-v2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/profileLogo.png",
@@ -25,6 +25,7 @@
     },
     "android": {
       "adaptiveIcon": {
+        "softwareKeyboardLayoutMode": "pan",
         "foregroundImage": "./assets/images/profileLogo.png",
         "backgroundColor": "#ffffff"
       },
@@ -44,7 +45,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "2e0ed3c9-de51-40f0-b367-5842d7247b62"
+        "projectId": "ae848d2a-f34b-4511-9378-5d204199682f"
       }
     },
     "owner": "bbinnovations"

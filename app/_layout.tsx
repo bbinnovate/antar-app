@@ -10,6 +10,7 @@ import { PortalHost } from "@rn-primitives/portal";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import { useAuthRedirect } from "~/lib/hooks/useAuthRedirect";
 import * as SplashScreen from "expo-splash-screen";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Keep the native splash screen visible while we check auth
 SplashScreen.preventAutoHideAsync();
@@ -49,175 +50,177 @@ export default function RootLayout() {
     return null;
   } else {
     return (
-      <ThemeProvider value={LIGHT_THEME}>
-        <StatusBar style="dark" />
-        <Stack>
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "Welcome",
-              headerBackVisible: false, // Hide back button completely
-              gestureEnabled: false, // Disable swipe back gesture
+      <SafeAreaProvider>
+        <ThemeProvider value={LIGHT_THEME}>
+          <StatusBar style="dark" />
+          <Stack>
+            <Stack.Screen
+              name="index"
+              options={{
+                title: "Welcome",
+                headerBackVisible: false, // Hide back button completely
+                gestureEnabled: false, // Disable swipe back gesture
+              }}
+            />
+            <Stack.Screen
+              name="register"
+              options={{
+                title: "Create Account",
+                headerBackVisible: false, // Hide back button completely
+                gestureEnabled: false, // Disable swipe back gesture
+                headerLeft: () => null, // No back button
+              }}
+            />
+            <Stack.Screen
+              name="login"
+              options={{
+                title: "Sign In",
+                headerBackVisible: false, // Hide back button completely
+                gestureEnabled: false, // Disable swipe back gesture
+                headerLeft: () => null, // No back button
+              }}
+            />
+            <Stack.Screen
+              name="complete-profile"
+              options={{
+                title: "Complete Your Antar Profile",
+                headerLeft: () => null, // No back button - user must complete or skip
+                gestureEnabled: false, // Disable swipe back gesture
+                headerBackVisible: false, // Hide back button completely
+              }}
+            />
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                headerShown: false, // Tab navigator will handle its own headers
+                gestureEnabled: false, // Disable swipe back to auth screens
+              }}
+            />
+            <Stack.Screen
+              name="ailment/gut-health"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="ailment/bone-joint"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="ailment/metabolic"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="ailment/womens-health"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="ailment/cardiovascular"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="ailment/liver-kidney"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="ailment/neurological"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="ailment/skin-health"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="physiotherapy"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="nutrition"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="mental-wellness"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="optimal-movement"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+            <Stack.Screen
+              name="liv-preventive"
+              options={{
+                headerShown: false, // Custom header in component
+              }}
+            />
+          </Stack>
+          <PortalHost />
+          <Toast
+            position="top"
+            topOffset={Platform.OS === "ios" ? 64 : 24}
+            visibilityTime={2500}
+            config={{
+              success: (props) => (
+                <BaseToast
+                  {...props}
+                  style={{
+                    backgroundColor: "#262020", // Antar Dark
+                    borderLeftColor: "#FF772F", // Antar Orange accent
+                    borderLeftWidth: 6,
+                  }}
+                  text1Style={{ color: "white" }}
+                  text2Style={{ color: "#FCE0E5" }}
+                />
+              ),
+              error: (props) => (
+                <ErrorToast
+                  {...props}
+                  style={{
+                    backgroundColor: "#262020",
+                    borderLeftColor: "#FF772F",
+                    borderLeftWidth: 6,
+                  }}
+                  text1Style={{ color: "white" }}
+                  text2Style={{ color: "#FCE0E5" }}
+                />
+              ),
+              info: (props) => (
+                <BaseToast
+                  {...props}
+                  style={{
+                    backgroundColor: "#262020",
+                    borderLeftColor: "#FF772F",
+                    borderLeftWidth: 6,
+                  }}
+                  text1Style={{ color: "white" }}
+                  text2Style={{ color: "#FCE0E5" }}
+                />
+              ),
             }}
           />
-          <Stack.Screen
-            name="register"
-            options={{
-              title: "Create Account",
-              headerBackVisible: false, // Hide back button completely
-              gestureEnabled: false, // Disable swipe back gesture
-              headerLeft: () => null, // No back button
-            }}
-          />
-          <Stack.Screen
-            name="login"
-            options={{
-              title: "Sign In",
-              headerBackVisible: false, // Hide back button completely
-              gestureEnabled: false, // Disable swipe back gesture
-              headerLeft: () => null, // No back button
-            }}
-          />
-          <Stack.Screen
-            name="complete-profile"
-            options={{
-              title: "Complete Your Antar Profile",
-              headerLeft: () => null, // No back button - user must complete or skip
-              gestureEnabled: false, // Disable swipe back gesture
-              headerBackVisible: false, // Hide back button completely
-            }}
-          />
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              headerShown: false, // Tab navigator will handle its own headers
-              gestureEnabled: false, // Disable swipe back to auth screens
-            }}
-          />
-          <Stack.Screen
-            name="ailment/gut-health"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="ailment/bone-joint"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="ailment/metabolic"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="ailment/womens-health"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="ailment/cardiovascular"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="ailment/liver-kidney"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="ailment/neurological"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="ailment/skin-health"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="physiotherapy"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="nutrition"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="mental-wellness"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="optimal-movement"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-          <Stack.Screen
-            name="liv-preventive"
-            options={{
-              headerShown: false, // Custom header in component
-            }}
-          />
-        </Stack>
-        <PortalHost />
-        <Toast
-          position="top"
-          topOffset={Platform.OS === "ios" ? 64 : 24}
-          visibilityTime={2500}
-          config={{
-            success: (props) => (
-              <BaseToast
-                {...props}
-                style={{
-                  backgroundColor: "#262020", // Antar Dark
-                  borderLeftColor: "#FF772F", // Antar Orange accent
-                  borderLeftWidth: 6,
-                }}
-                text1Style={{ color: "white" }}
-                text2Style={{ color: "#FCE0E5" }}
-              />
-            ),
-            error: (props) => (
-              <ErrorToast
-                {...props}
-                style={{
-                  backgroundColor: "#262020",
-                  borderLeftColor: "#FF772F",
-                  borderLeftWidth: 6,
-                }}
-                text1Style={{ color: "white" }}
-                text2Style={{ color: "#FCE0E5" }}
-              />
-            ),
-            info: (props) => (
-              <BaseToast
-                {...props}
-                style={{
-                  backgroundColor: "#262020",
-                  borderLeftColor: "#FF772F",
-                  borderLeftWidth: 6,
-                }}
-                text1Style={{ color: "white" }}
-                text2Style={{ color: "#FCE0E5" }}
-              />
-            ),
-          }}
-        />
-      </ThemeProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
     );
   }
 }

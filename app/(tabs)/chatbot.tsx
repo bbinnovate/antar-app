@@ -11,8 +11,10 @@ import {
   Linking,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Send } from "lucide-react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ArrowLeft, Send } from "lucide-react-native";
 import chatbotData from "~/lib/chatbot-data.json";
+import { useNavigation } from "expo-router";
 
 const agentAvatar = require("~/assets/images/profileLogo.png"); // Add your agent avatar image
 const userAvatar = require("~/assets/images/user.png"); // Add your user avatar image
@@ -93,9 +95,15 @@ function renderMessageText(text: string, color: string) {
 
       // Parse <b>
       line.replace(boldRegex, (match, p1, offset) => {
-        pushPlain(line.substring(lastIdx, offset), `plain-b-${idx}-${lineIdx}-${lastIdx}`);
+        pushPlain(
+          line.substring(lastIdx, offset),
+          `plain-b-${idx}-${lineIdx}-${lastIdx}`
+        );
         elements.push(
-          <Text key={`b-${idx}-${lineIdx}-${offset}`} style={{ fontWeight: "bold", color }}>
+          <Text
+            key={`b-${idx}-${lineIdx}-${offset}`}
+            style={{ fontWeight: "bold", color }}
+          >
             {p1}
           </Text>
         );
@@ -105,9 +113,15 @@ function renderMessageText(text: string, color: string) {
 
       // Parse <i>
       line.replace(italicRegex, (match, p1, offset) => {
-        pushPlain(line.substring(lastIdx, offset), `plain-i-${idx}-${lineIdx}-${lastIdx}`);
+        pushPlain(
+          line.substring(lastIdx, offset),
+          `plain-i-${idx}-${lineIdx}-${lastIdx}`
+        );
         elements.push(
-          <Text key={`i-${idx}-${lineIdx}-${offset}`} style={{ fontStyle: "italic", color }}>
+          <Text
+            key={`i-${idx}-${lineIdx}-${offset}`}
+            style={{ fontStyle: "italic", color }}
+          >
             {p1}
           </Text>
         );
@@ -117,9 +131,15 @@ function renderMessageText(text: string, color: string) {
 
       // Parse <u>
       line.replace(underlineRegex, (match, p1, offset) => {
-        pushPlain(line.substring(lastIdx, offset), `plain-u-${idx}-${lineIdx}-${lastIdx}`);
+        pushPlain(
+          line.substring(lastIdx, offset),
+          `plain-u-${idx}-${lineIdx}-${lastIdx}`
+        );
         elements.push(
-          <Text key={`u-${idx}-${lineIdx}-${offset}`} style={{ textDecorationLine: "underline", color }}>
+          <Text
+            key={`u-${idx}-${lineIdx}-${offset}`}
+            style={{ textDecorationLine: "underline", color }}
+          >
             {p1}
           </Text>
         );
@@ -136,7 +156,10 @@ function renderMessageText(text: string, color: string) {
         );
       } else {
         // Push any remaining plain text
-        pushPlain(line.substring(lastIdx), `plain-end-${idx}-${lineIdx}-${lastIdx}`);
+        pushPlain(
+          line.substring(lastIdx),
+          `plain-end-${idx}-${lineIdx}-${lastIdx}`
+        );
         return <Text key={`line-${idx}-${lineIdx}`}>{elements}</Text>;
       }
     });
@@ -153,7 +176,8 @@ export default function ChatbotScreen() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<KeyboardAwareScrollView | null>(null);
+  const navigation = useNavigation();
 
   const handleSend = () => {
     if (!input.trim() || loading) return;
@@ -190,8 +214,8 @@ export default function ChatbotScreen() {
 
   useEffect(() => {
     // Auto-scroll to bottom when messages change
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({ animated: true });
+    if (scrollViewRef?.current) {
+      scrollViewRef?.current?.scrollToEnd(true);
     }
   }, [messages]);
 
@@ -199,13 +223,13 @@ export default function ChatbotScreen() {
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: "#F8FAFC" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0} // Set to your tab bar height
     >
       <View style={{ flex: 1 }}>
         <SafeAreaView
           edges={["top"]}
           style={{
-            backgroundColor: "transparent", // <-- Make SafeAreaView transparent
+            backgroundColor: "transparent",
             borderBottomLeftRadius: 24,
             borderBottomRightRadius: 24,
           }}
@@ -217,15 +241,21 @@ export default function ChatbotScreen() {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-            //   borderBottomLeftRadius: 24,
-            //   borderBottomRightRadius: 24,
+              //   borderBottomLeftRadius: 24,
+              //   borderBottomRightRadius: 24,
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{ marginRight: 12 }}
+              >
+                <ArrowLeft size={26} color="#fff" />
+              </TouchableOpacity>
               <Image
                 source={agentAvatar}
                 style={{
-                  width: 28,    
+                  width: 28,
                   height: 28,
                   borderRadius: 14,
                   marginRight: 8,
@@ -250,10 +280,18 @@ export default function ChatbotScreen() {
             </View>
           </View>
         </SafeAreaView>
-        <ScrollView
+
+        <KeyboardAwareScrollView
           ref={scrollViewRef}
-          style={{ flex: 1, padding: 16 }}
-          contentContainerStyle={{ paddingBottom: 80 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            padding: 16,
+            justifyContent: "flex-end",
+          }}
+          keyboardShouldPersistTaps="handled"
+          enableOnAndroid
+          extraScrollHeight={20} // push input above keyboard nicely
+          showsVerticalScrollIndicator={false}
         >
           {messages.map((msg: any, idx: number) => (
             <View
@@ -332,13 +370,10 @@ export default function ChatbotScreen() {
               </View>
             </View>
           ))}
-        </ScrollView>
+        </KeyboardAwareScrollView>
+
         <View
           style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
             backgroundColor: "#fff",
             padding: 12,
             borderTopWidth: 1,
@@ -361,10 +396,10 @@ export default function ChatbotScreen() {
               value={input}
               onChangeText={setInput}
               placeholder="Type your message here..."
+              placeholderTextColor="#6B7280"
               style={{
                 flex: 1,
                 backgroundColor: "transparent",
-                // borderRadius: 5,
                 paddingHorizontal: 8,
                 paddingVertical: 8,
                 fontSize: 15,
