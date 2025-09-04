@@ -52,12 +52,13 @@ export default function RootLayout() {
     return (
       <SafeAreaProvider>
         <ThemeProvider value={LIGHT_THEME}>
-          <StatusBar style="dark" />
+          <StatusBar style="light" />
           <Stack>
             <Stack.Screen
               name="index"
               options={{
                 title: "Welcome",
+                headerShown: false, // Full-bleed onboarding screen
                 headerBackVisible: false, // Hide back button completely
                 gestureEnabled: false, // Disable swipe back gesture
               }}

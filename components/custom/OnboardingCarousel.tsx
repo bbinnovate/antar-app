@@ -5,8 +5,10 @@ import {
   Dimensions,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Image,
 } from "react-native";
-import DecoratedImageCard from "./DecoratedImageCard";
+import { Text } from "~/components/ui/text";
+import { LinearGradient } from "expo-linear-gradient";
 
 const { width } = Dimensions.get("window");
 
@@ -15,6 +17,7 @@ export interface OnboardingSlide {
   image: any | null;
   title: string;
   subtitle?: string;
+  logo?: any;
   emoji?: string; // kept for future, not used in image-only card
 }
 
@@ -22,12 +25,14 @@ interface OnboardingCarouselProps {
   slides: OnboardingSlide[];
   compact?: boolean;
   autoScrollMs?: number;
+  onIndexChange?: (index: number) => void; // notify parent for external indicators
 }
 
 export default function OnboardingCarousel({
   slides,
   compact = false,
   autoScrollMs = 3500,
+  onIndexChange,
 }: OnboardingCarouselProps) {
   const [index, setIndex] = React.useState(0);
   const indexRef = React.useRef(0);
@@ -38,6 +43,7 @@ export default function OnboardingCarousel({
     const newIndex = Math.round(x / width);
     setIndex(newIndex);
     indexRef.current = newIndex;
+    onIndexChange?.(newIndex);
   };
 
   React.useEffect(() => {
@@ -57,7 +63,7 @@ export default function OnboardingCarousel({
   }, [slides.length, autoScrollMs]);
 
   return (
-    <View>
+    <View style={{ flex: 1, position: "relative" }}>
       <FlatList
         ref={listRef}
         data={slides}
@@ -71,27 +77,69 @@ export default function OnboardingCarousel({
           offset: width * i,
           index: i,
         })}
+        style={{ flex: 1 }}
         renderItem={({ item }) => (
-          <View style={{ width, paddingHorizontal: 24 }}>
-            <DecoratedImageCard imageSource={item.image} compact={compact} />
+          <View style={{ width, height: "100%" }}>
+            {/* Full Screen Background Image */}
+            <Image
+              source={item.image}
+              style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+              }}
+              resizeMode="cover"
+            />
+
+            {/* Gradient overlay for better text readability */}
+            <LinearGradient
+              colors={[
+                "rgba(17, 18, 20, 0)",
+                "rgba(17, 18, 20, 0.26)",
+                "rgba(17, 18, 20, 0.87)",
+              ]}
+              locations={[0, 0.26, 0.87]}
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+              }}
+            />
+
+            {/* Content Container - Positioned at bottom with proper spacing */}
+            <View className="absolute bottom-0 left-0 right-0 pb-10">
+              {/* Logo */}
+              {item.logo && (
+                <View className="items-center mb-4">
+                  <View className="w-16 h-16 rounded-full items-center justify-center bg-white/10">
+                    <Image
+                      source={item.logo}
+                      className="w-full h-full"
+                      resizeMode="contain"
+                    />
+                  </View>
+                </View>
+              )}
+
+              {/* Title */}
+              <Text className="text-white text-4xl font-bold text-center leading-tight mb-3 px-6">
+                {item.title}
+              </Text>
+
+              {/* Subtitle */}
+              {item.subtitle && (
+                <Text className="text-white text-base text-center leading-relaxed opacity-90 mb-6 px-6">
+                  {item.subtitle}
+                </Text>
+              )}
+
+              {/* Leave bottom clear; external overlay will render progress + CTAs */}
+            </View>
           </View>
         )}
       />
-
-      {/* Dots */}
-      <View className="flex-row justify-center items-center mt-4">
-        {slides.map((s, i) => (
-          <View
-            key={s.key}
-            className="mx-1 rounded-full"
-            style={{
-              width: i === index ? 14 : 8,
-              height: 8,
-              backgroundColor: i === index ? "#FF772F" : "#CBD5E1",
-            }}
-          />
-        ))}
-      </View>
     </View>
   );
 }
