@@ -50,11 +50,40 @@ export interface ParivarPlanDetails {
 }
 
 export class RazorpayService {
-  private static readonly PARIVAR_PLAN: ParivarPlanDetails =
-    PARIVAR_PLAN_CONFIG;
+  private static readonly PARIVAR_PLAN: ParivarPlanDetails = PARIVAR_PLAN_CONFIG;
+
+  private static async fetchParivarPlans(): Promise<ParivarPlanDetails[]> {
+    try {
+      const stored = await AsyncStorage.getItem("antar-app-access-data");
+      const token = stored ? JSON.parse(stored)?.token : undefined;
+
+      if (!token) {
+        throw new Error("Please sign in to continue with payment");
+      }
+
+      const api = new RESTApiCall();
+      const response = await api.get("payment/subscription-plans", {
+        headers: {
+          token,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response?.status === 200) {
+        return response?.data?.plans;
+      }
+
+      throw new Error(
+        response?.data?.message || "Failed to fetch subscription plans"
+      );
+    } catch (error: any) {
+      console.error("Error fetching subscription plans:", error);
+      throw new Error(error.message || "Failed to fetch subscription plans");
+    }
+  }
 
   private static async createOrder(
-    planDetails: ParivarPlanDetails
+    planDetails: ParivarPlanDetails | undefined
   ): Promise<RazorpayOrder> {
     try {
       const stored = await AsyncStorage.getItem("antar-app-access-data");
@@ -68,10 +97,10 @@ export class RazorpayService {
       const response = await api.post(
         "payment/create-razorpay-order",
         {
-          amount: planDetails.amount,
-          currency: planDetails.currency,
-          receipt: `${planDetails.planId}_${Date.now()}`,
-          planId: planDetails.planId,
+          amount: planDetails?.amount,
+          currency: planDetails?.currency,
+          receipt: `${planDetails?.planId}_${Date.now()}`,
+          planId: planDetails?.planId,
         },
         {
           headers: {
@@ -169,7 +198,8 @@ export class RazorpayService {
    * Main function to process Parivar subscription payment
    */
   public static async processParivarPayment(
-    razorpayKeyId: string
+    razorpayKeyId: string,
+    planId?: string
   ): Promise<{ success: boolean; message: string }> {
     try {
       // Step 1: Create order on backend
@@ -179,7 +209,14 @@ export class RazorpayService {
         visibilityTime: 2000,
       });
 
-      const order = await this.createOrder(this.PARIVAR_PLAN);
+      console.log("Using Razorpay Key ID:", razorpayKeyId);
+
+      const parivarPlans = await this.fetchParivarPlans();
+      const plan = parivarPlans.find((p) => p.planId === planId);
+
+      console.log("Using Parivar Plan:", plan, planId);
+
+      const order = await this.createOrder(plan);
 
       // Step 2: Get user profile for prefill
       const userProfile = await this.getUserProfile();
@@ -239,12 +276,12 @@ export class RazorpayService {
 
       let errorMessage = "Payment failed. Please try again.";
 
-      if (error.code === "PAYMENT_CANCELLED") {
+      if (error?.code === "PAYMENT_CANCELLED") {
         errorMessage = "Payment was cancelled";
-      } else if (error.code === "NETWORK_ERROR") {
+      } else if (error?.code === "NETWORK_ERROR") {
         errorMessage = "Network error. Please check your connection.";
-      } else if (error.message) {
-        errorMessage = error.message;
+      } else if (error?.message) {
+        errorMessage = error?.message;
       }
 
       Toast.show({

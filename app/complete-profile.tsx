@@ -5,6 +5,8 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import Toast from "react-native-toast-message";
+import RESTApiCall from "~/lib/RESTApiCall";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface FormData {
   first_name: string;
@@ -174,10 +176,25 @@ export default function CompleteProfileScreen() {
 
     setIsLoading(true);
     try {
-      // Demo-only: simulate completion, show XP, and navigate
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      Toast.show({ type: "success", text1: "Profile completed! +50 XP" });
-      router.replace("/(tabs)/parivar");
+      // console.log(formData);
+      const data: string | null = await AsyncStorage.getItem(
+        "antar-app-access-data"
+      );
+      if (!data) {
+        Toast.show({ type: "error", text1: "Something went wrong" });
+        return null;
+      }
+      // await new Promise((resolve) => setTimeout(resolve, 600));
+
+      const apiCall = new RESTApiCall();
+      const response = await apiCall.put("user/profile", formData, {
+        headers: { Authorization: `Bearer ${JSON.parse(data).token}` },
+      });
+      // console.log("response - PUT - ", response?.data);
+      if (response?.data?.success) {
+        Toast.show({ type: "success", text1: "Profile completed! +50 XP" });
+      }
+      router.push("/(tabs)/parivar");
     } catch (error) {
       console.error("Profile completion error:", error);
       Toast.show({ type: "error", text1: "Something went wrong" });
@@ -227,7 +244,7 @@ export default function CompleteProfileScreen() {
 
   const handleSkip = () => {
     // User can skip profile completion and go to home screen
-    router.replace("/(tabs)/home");
+    router.replace("/(tabs)/parivar");
   };
 
   return (
@@ -334,7 +351,7 @@ export default function CompleteProfileScreen() {
                   </Text>
                   <Button
                     variant="outline"
-                    onPress={() => setShowGenderOptions(!showGenderOptions)}
+                    onPressIn={() => setShowGenderOptions(!showGenderOptions)}
                     className="w-full justify-start h-12 rounded-xl items-start"
                   >
                     <Text
@@ -359,7 +376,7 @@ export default function CompleteProfileScreen() {
                         <Button
                           key={option.value}
                           variant="ghost"
-                          onPress={() => handleGenderSelect(option.value)}
+                          onPressIn={() => handleGenderSelect(option.value)}
                           className="w-full justify-start items-start rounded-none border-b border-input last:border-b-0"
                         >
                           <Text>{option.label}</Text>
@@ -400,7 +417,7 @@ export default function CompleteProfileScreen() {
                       <Button
                         key={opt.value}
                         variant={selected ? "default" : "outline"}
-                        onPress={() =>
+                        onPressIn={() =>
                           updateFormData("activity_level", opt.value)
                         }
                         className={`h-10 rounded-full px-4 ${
@@ -439,7 +456,7 @@ export default function CompleteProfileScreen() {
                       <Button
                         key={opt.value}
                         variant={selected ? "default" : "outline"}
-                        onPress={() => toggleCondition(opt.value)}
+                        onPressIn={() => toggleCondition(opt.value)}
                         className={`h-10 rounded-full px-4 ${
                           selected ? "bg-antar-teal" : ""
                         }`}
@@ -469,7 +486,7 @@ export default function CompleteProfileScreen() {
                       <Button
                         key={opt.value}
                         variant={selected ? "default" : "outline"}
-                        onPress={() => toggleGoal(opt.value)}
+                        onPressIn={() => toggleGoal(opt.value)}
                         className={`h-10 rounded-full px-4 ${
                           selected ? "bg-antar-teal" : ""
                         }`}
@@ -498,7 +515,7 @@ export default function CompleteProfileScreen() {
             {/* Action Buttons */}
             <View className="pt-6 flex flex-col gap-4">
               <Button
-                onPress={handleCompleteProfile}
+                onPressIn={handleCompleteProfile}
                 disabled={isLoading}
                 className="w-full h-14 rounded-2xl bg-antar-teal shadow-lg"
               >

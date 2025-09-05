@@ -2,6 +2,7 @@ import * as React from "react";
 import { TextInput, View, Pressable } from "react-native";
 import { cn } from "~/lib/utils";
 import { Text } from "./text";
+import { EyeIcon, EyeOffIcon } from "lucide-react-native";
 
 export interface PasswordInputProps
   extends Omit<
@@ -50,7 +51,7 @@ const PasswordInput = React.forwardRef<TextInput, PasswordInputProps>(
             }
           >
             <Text className="text-lg text-muted-foreground">
-              {!isPasswordVisible ? "🙈" : "🐵"}
+              {!isPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
             </Text>
           </Pressable>
         </View>
