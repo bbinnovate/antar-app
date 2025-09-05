@@ -67,15 +67,7 @@ export default function RootLayout() {
               name="register"
               options={{
                 title: "Create Account",
-                headerBackVisible: false, // Hide back button completely
-                gestureEnabled: false, // Disable swipe back gesture
-                headerLeft: () => null, // No back button
-              }}
-            />
-            <Stack.Screen
-              name="login"
-              options={{
-                title: "Sign In",
+                headerShown: false, // Hide header so hero starts at top
                 headerBackVisible: false, // Hide back button completely
                 gestureEnabled: false, // Disable swipe back gesture
                 headerLeft: () => null, // No back button

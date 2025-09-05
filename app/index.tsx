@@ -61,15 +61,13 @@ export default function WelcomeScreen() {
           onPress={() => router.push("/register")}
         />
         <View className="flex-row justify-center items-center mb-3 mt-1">
-          <Text className="text-white text-sm">Already have account? </Text>
+          <Text className="text-white">Already have account?</Text>
           <Button
             variant="link"
-            onPress={() => router.push("/login")}
+            onPress={() => router.push("/register")}
             size={"sm"}
           >
-            <Text className="text-antar-orange font-medium underline">
-              Sign In
-            </Text>
+            <Text className="text-antar-orange font-medium">Sign In</Text>
           </Button>
         </View>
 
