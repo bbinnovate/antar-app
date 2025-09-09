@@ -1,7 +1,23 @@
 import { Tabs } from "expo-router";
 import * as React from "react";
-import { Platform, View, Text, Image, ImageSourcePropType } from "react-native";
+import {
+  Platform,
+  View,
+  Text,
+  Image,
+  ImageSourcePropType,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import {
+  HandHeart,
+  BookOpen,
+  Users,
+  Bot,
+  User as UserIcon,
+  Image as ImageIcon,
+  Heart,
+} from "lucide-react-native";
 const profileLogo = require("~/assets/images/profileLogo.png");
 
 export default function TabLayout() {
@@ -9,83 +25,40 @@ export default function TabLayout() {
     <SafeAreaProvider>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#236A61", // Antar Teal
-          tabBarInactiveTintColor: "#6B7280", // Standard gray
-          headerShown: false, // Remove duplicate headers
-          tabBarStyle: {
-            backgroundColor: "rgba(255, 255, 255, 0.95)", // Light background
-            borderTopWidth: 1,
-            borderTopColor: "rgba(0, 0, 0, 0.1)", // Dark border on light
-            elevation: 8,
-            shadowOpacity: 0.1,
-            shadowRadius: 8,
-            shadowOffset: { width: 0, height: -10 },
-            shadowColor: "#000",
-            height: Platform.OS === "ios" ? 90 : 80,
-            paddingBottom: Platform.OS === "ios" ? 25 : 10,
-            paddingTop: 5,
-            paddingHorizontal: 10,
-          },
-          tabBarItemStyle: {
-            borderRadius: 20,
-            marginHorizontal: 1,
-            paddingVertical: 5,
-          },
-          tabBarLabelStyle: {
-            fontSize: 10,
-            fontWeight: "600",
-            marginTop: 4,
-          },
+          headerShown: false,
+          tabBarActiveTintColor: "#E87D36",
+          tabBarInactiveTintColor: "#6B7280",
         }}
+        tabBar={(props) => <CustomTabBar {...props} />}
       >
-        <Tabs.Screen
-          name="parivar"
-          options={{
-            title: "Parivar",
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon
-                imageSource={profileLogo}
-                color={color}
-                focused={focused}
-              />
-            ),
-          }}
-        />
         <Tabs.Screen
           name="offerings"
           options={{
             title: "Offerings",
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name="✨" color={color} focused={focused} />
-            ),
           }}
         />
         <Tabs.Screen
           name="insights"
           options={{
             title: "Insights",
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name="🧠" color={color} focused={focused} />
-            ),
+          }}
+        />
+        <Tabs.Screen
+          name="parivar"
+          options={{
+            title: "Parivaar",
+          }}
+        />
+        <Tabs.Screen
+          name="chatbot"
+          options={{
+            title: "ChatBot",
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
             title: "Profile",
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name="👤" color={color} focused={focused} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="chatbot"
-          options={{
-            title: "Chatbot",
-            tabBarStyle: { display: "none" }, // Hide tab bar on chatbot screen
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon name="💬" color={color} focused={focused} />
-            ),
           }}
         />
         {/* Keep these routes in codebase but hide from tab bar */}
@@ -108,51 +81,147 @@ interface TabBarIconProps {
   suppressFocusStyle?: boolean;
 }
 
-function TabBarIcon({
-  name,
-  imageSource,
-  color,
-  focused,
-  emphasized = false,
-  suppressFocusStyle = false,
-}: TabBarIconProps) {
-  return (
-    <View
-      style={{
-        width: emphasized ? 56 : 36,
-        height: emphasized ? 56 : 36,
-        borderRadius: emphasized ? 28 : 18,
-        backgroundColor: emphasized ? "rgba(35,106,97,0.08)" : "transparent",
-        borderWidth: focused && !suppressFocusStyle ? 2 : 0,
-        borderColor: focused && !suppressFocusStyle ? "#236A61" : "transparent",
-        shadowColor: emphasized ? "#236A61" : "transparent",
-        shadowOffset: { width: 0, height: emphasized ? 6 : 2 },
-        shadowOpacity: emphasized ? 0.2 : 0,
-        shadowRadius: emphasized ? 6 : 3.84,
-        elevation: emphasized ? 4 : 0,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {imageSource ? (
-        <Image
-          source={imageSource}
+function getIcon(name: string, color: string, focused: boolean) {
+  const size = 20;
+  const stroke = focused ? "#FFFFFF" : color;
+  switch (name) {
+    case "offerings":
+      return <HandHeart size={size} color={stroke} strokeWidth={2} />;
+    case "insights":
+      return <BookOpen size={size} color={stroke} strokeWidth={2} />;
+    case "parivar":
+      return (
+        <View
           style={{
-            width: emphasized ? 28 : 20,
-            height: emphasized ? 28 : 20,
-          }}
-          resizeMode="contain"
-        />
-      ) : (
-        <Text
-          style={{
-            fontSize: emphasized ? 22 : 18,
-            color: focused && !suppressFocusStyle ? "white" : color,
+            width: size,
+            height: size,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {name}
-        </Text>
-      )}
-    </View>
+          <Users size={size} color={stroke} strokeWidth={2} />
+          <Heart
+            size={Math.round(size * 0.65)}
+            color={stroke}
+            strokeWidth={2}
+            style={{ position: "absolute", top: -4 }}
+          />
+        </View>
+      );
+    case "chatbot":
+      return <Bot size={size} color={stroke} strokeWidth={2} />;
+    case "profile":
+      return <UserIcon size={size} color={stroke} strokeWidth={2} />;
+    default:
+      return <ImageIcon size={size} color={stroke} strokeWidth={2} />;
+  }
+}
+
+function CustomTabBar({ state, descriptors, navigation }: any) {
+  const activeColor = "#E87D36"; // Antar Orange
+  const inactiveColor = "#6B7280"; // Gray
+  const visibleTabs = new Set([
+    "offerings",
+    "insights",
+    "parivar",
+    "chatbot",
+    "profile",
+  ]);
+  const focusedKey = state.routes[state.index]?.key;
+
+  return (
+    <SafeAreaView edges={["bottom"]} style={{ backgroundColor: "transparent" }}>
+      <View
+        style={{
+          marginHorizontal: 10,
+          marginBottom: Platform.OS === "ios" ? 6 : 10,
+          marginTop: 8,
+          backgroundColor: "#ffffff",
+          borderRadius: 28,
+          paddingVertical: 8,
+          paddingHorizontal: 8,
+          shadowColor: "#000",
+          shadowOpacity: 0.20,
+          shadowRadius: 14,
+          shadowOffset: { width: 0, height: 4 },
+          elevation: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        {state.routes
+          .filter((r: any) => visibleTabs.has(r.name))
+          .map((route: any) => {
+            const { options } = descriptors[route.key];
+            const label =
+              options.tabBarLabel !== undefined
+                ? options.tabBarLabel
+                : options.title !== undefined
+                ? options.title
+                : route.name;
+
+            const isFocused = route.key === focusedKey;
+            const color = isFocused ? activeColor : inactiveColor; // label color
+            const iconColor = isFocused ? "#FFFFFF" : activeColor; // icon stroke color matches Figma
+
+            const onPress = () => {
+              const event = navigation.emit({
+                type: "tabPress",
+                target: route.key,
+                canPreventDefault: true,
+              });
+              if (!isFocused && !event.defaultPrevented) {
+                navigation.navigate(route.name);
+              }
+            };
+
+            const onLongPress = () => {
+              navigation.emit({
+                type: "tabLongPress",
+                target: route.key,
+              });
+            };
+
+            return (
+              <TouchableOpacity
+                key={route.key}
+                accessibilityRole="button"
+                accessibilityState={isFocused ? { selected: true } : {}}
+                accessibilityLabel={options.tabBarAccessibilityLabel}
+                testID={options.tabBarTestID}
+                onPress={onPress}
+                onLongPress={onLongPress}
+                style={{ flex: 1, alignItems: "center" }}
+                activeOpacity={0.8}
+              >
+                <View
+                  style={{
+                    width: 42,
+                    height: 36,
+                    borderRadius: 20,
+                    backgroundColor: isFocused ? activeColor : "transparent",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {getIcon(route.name, iconColor, isFocused)}
+                </View>
+                <Text
+                  style={{
+                    marginTop: 4,
+                    fontSize: 11,
+                    fontWeight: "600",
+                    color,
+                  }}
+                  numberOfLines={1}
+                >
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+      </View>
+    </SafeAreaView>
   );
 }

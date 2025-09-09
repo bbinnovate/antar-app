@@ -1063,7 +1063,7 @@ export default function ParivarScreen() {
                 Antar Parivaar
               </Text>
             </View>
-            <Text className="text-base text-white/90">
+            <Text className="text-base font-medium text-white/90">
               Join our parivaar where we make your journey memorable and
               healthier!
             </Text>
@@ -1095,7 +1095,7 @@ export default function ParivarScreen() {
                   <View className="w-4 h-4 rounded-full bg-white/30 items-center justify-center mr-2">
                     <Text className="text-white text-[10px]">✓</Text>
                   </View>
-                  <Text className="text-sm text-white">{line}</Text>
+                  <Text className="text-sm text-white font-medium">{line}</Text>
                 </View>
               ))}
             </View>
@@ -1104,19 +1104,10 @@ export default function ParivarScreen() {
           {/* CTA Content */}
           <View className="mx-3">
             {!hasParivar ? (
-              <Button
-                className="rounded-full w-full bg-antar-orange border-2 border-white shadow"
+              <GradientCTA
+                title="Unlock for ₹199/month"
                 onPress={showPurchaseAlert}
-              >
-                <View className="flex-row items-center justify-center gap-2 w-full">
-                  <Text className="text-white font-semibold ml-4">
-                    Unlock for ₹199/month
-                  </Text>
-                  <View className="w-7 h-7 mr-2 rounded-full bg-white items-center justify-center">
-                    <Text className="text-antar-orange text-sm">→</Text>
-                  </View>
-                </View>
-              </Button>
+              />
             ) : null}
             <Text className="mt-3 mb-3 text-xs text-white/70 text-center">
               Cancel anytime. No hidden fees
@@ -1178,42 +1169,70 @@ export default function ParivarScreen() {
         </View>
       </Section>
 
-      {/* Weekly experience preview */}
-      <Section title="Your weekly rhythm">
-        <View className="rounded-2xl overflow-hidden border border-white/40 bg-white/50 p-2">
-          {!hasParivar && (
-            <Text className="mt-2 text-sm font-bold text-antar-teal text-center">
-              Included in Antar Parivaar
-            </Text>
-          )}
-          <View className="flex-row justify-between">
-            {[
-              { day: "Mon", time: "7am", label: "Mobility" },
-              { day: "Wed", time: "7am", label: "Yoga" },
-              { day: "Fri", time: "7am", label: "Breathwork" },
-            ].map((s, i) => (
-              <View
-                key={i}
-                className="flex-1 mx-1 p-4 items-center justify-center rounded-lg"
-              >
-                <View className="w-16 h-20 rounded-lg overflow-hidden items-center justify-center">
-                  <View className="bg-antar-dark h-6 w-full items-center justify-center">
-                    <Text className="text-white text-xs font-bold">
-                      {s.day}
+      {/* Weekly rhythm (list style per mock) */}
+      <Section title="Your Weekly Rhythm" subtitle="Included in Antar Parivaar">
+        <View className="-my-2">
+          {[
+            { label: "Mobility", time: "5:00 PM" },
+            { label: "Yoga", time: "5:00 PM" },
+            { label: "Breathwork", time: "5:00 PM" },
+          ].map((item, idx) => {
+            const months = [
+              "JAN",
+              "FEB",
+              "MAR",
+              "APR",
+              "MAY",
+              "JUN",
+              "JUL",
+              "AUG",
+              "SEP",
+              "OCT",
+              "NOV",
+              "DEC",
+            ];
+            const month = months[new Date().getMonth()];
+            const fixedDows = ["MON", "WED", "FRI"];
+            const dow = fixedDows[idx] || "";
+            return (
+              <View key={idx}>
+                <View className="flex-row items-center py-3">
+                  {/* Date badge */}
+                  <View className="mr-3">
+                    <View className="w-16 rounded-lg overflow-hidden border border-black">
+                      <View className="bg-black h-5 w-full items-center justify-center">
+                        <Text className="text-white text-[10px] font-bold">
+                          {month}
+                        </Text>
+                      </View>
+                      <View className="bg-white w-full items-center justify-center py-3">
+                        <Text className="text-[10px] text-antar-orange font-semibold">
+                          {dow}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Content */}
+                  <View className="flex-1">
+                    <Text className="text-antar-orange font-semibold">
+                      {item.label}
+                    </Text>
+                    <Text className="text-sm text-muted-foreground">
+                      Time: {item.time}
                     </Text>
                   </View>
-                  <View className="bg-white flex-1 w-full items-center justify-center">
-                    <Text className="text-antar-dark text-lg font-bold">
-                      {s.time}
-                    </Text>
+
+                  {/* Arrow */}
+                  <View className="w-7 h-7 rounded-full bg-antar-orange items-center justify-center">
+                    <Text className="text-white text-base">→</Text>
                   </View>
                 </View>
-                <Text className="mt-2 text-sm font-medium text-center text-antar-dark">
-                  {s.label}
-                </Text>
+                {/* Divider */}
+                {idx < 2 && <View className="h-px bg-[#E87D36]/30" />}
               </View>
-            ))}
-          </View>
+            );
+          })}
         </View>
       </Section>
 
@@ -1241,20 +1260,26 @@ export default function ParivarScreen() {
       {/* Lock notice + CTA for non-subscribers */}
       {!hasParivar ? (
         <Section>
-          <View className="p-4 rounded-2xl bg-antar-teal/5 border border-antar-teal/20">
-            <Text className="text-antar-teal font-medium">
-              Unlock full access to join live sessions, webinars and the private
-              community
-            </Text>
-          </View>
-          <Button
-            className="mt-3 bg-antar-orange w-full rounded-xl"
-            onPress={showPurchaseAlert}
+          <LinearGradient
+            colors={["#6E863C", "#236A61", "#112F15"]}
+            locations={[0, 0.55, 1]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{ borderRadius: 14 }}
+            className="w-full rounded-3xl relative overflow-hidden"
           >
-            <Text className="text-white font-semibold">
-              Unlock for ₹199/month
-            </Text>
-          </Button>
+            <View className="p-4 rounded-2xl">
+              <Text className="text-gray-50 font-medium text-center">
+                Unlock full access to join live sessions, webinars and the
+                private community
+              </Text>
+            </View>
+          </LinearGradient>
+          <GradientCTA
+            title="Unlock for ₹199/month"
+            style={{ marginTop: 12 }}
+            onPress={showPurchaseAlert}
+          />
         </Section>
       ) : null}
     </Screen>

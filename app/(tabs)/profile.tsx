@@ -87,7 +87,7 @@ export default function ProfileScreen() {
   );
 
   return (
-    <Screen backgroundClassName="bg-gradient-to-b from-primary/5 to-secondary/30">
+    <Screen backgroundClassName="">
       <Section>
         <View className="items-center flex flex-col gap-4">
           <Avatar className="w-24 h-24" alt="Profile Picture">
