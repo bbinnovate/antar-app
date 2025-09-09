@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import Svg, { Line } from "react-native-svg";
+import Svg, { Line, Circle, Path } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
@@ -556,97 +556,154 @@ export default function ParivarScreen() {
           </Section>
         )} */}
 
-        {/* Progress Overview */}
-        {!isLoading && !error && (
-          <Section title="🏆 Your Journey">
-            <View className="p-5 rounded-2xl bg-antar-teal/10 border border-antar-teal/20">
-              <View className="flex-row items-center justify-between mb-4">
-                <View className="flex-1">
-                  <Text className="text-antar-teal font-bold text-xl">
-                    {sessionsData?.userJourney?.sessionsCompleted || 12}{" "}
-                    Sessions Completed
-                  </Text>
-                  <Text className="text-sm text-muted-foreground mt-1">
-                    🎯 {sessionsData?.userJourney?.attendanceRate || 85}%
-                    attendance rate •{" "}
-                    {sessionsData?.userJourney?.currentStreak || 4} week streak
-                  </Text>
-                </View>
-                <View className="items-center">
-                  <Text className="text-4xl">🏅</Text>
-                </View>
-              </View>
-
-              {/* Progress Bar */}
-              <View className="mb-4">
-                <View className="flex-row justify-between mb-2">
-                  <Text className="text-sm text-muted-foreground">
-                    Monthly Goal Progress
-                  </Text>
-                  <Text className="text-sm text-antar-teal font-semibold">
-                    {sessionsData?.userJourney?.monthlyGoal?.completed || 12}/
-                    {sessionsData?.userJourney?.monthlyGoal?.target || 15}{" "}
-                    sessions
-                  </Text>
-                </View>
-                <View className="h-3 bg-gray-300 rounded-full">
-                  <View className="h-3 bg-antar-teal rounded-full w-4/5" />
-                </View>
-              </View>
-
-              {/* Achievements Row */}
-              <View className="flex-row items-center justify-between pt-4 border-t border-antar-teal/20">
-                {(
-                  sessionsData?.userJourney?.achievements ||
-                  mockApiData.userJourney.achievements
-                ).map((achievement: any, index: number) => (
-                  <View key={index} className="flex-row items-center">
-                    <Text className="text-lg mr-2">{achievement.icon}</Text>
-                    <Text className="font-semibold text-antar-teal text-sm">
-                      {achievement.title}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          </Section>
-        )}
-
-        {/* Today's Focus */}
+        {/* Progress Overview - Your Journey (Post-purchase) */}
         {!isLoading && !error && (
           <Section>
-            <View className="p-5 rounded-3xl bg-antar-orange/10 border border-antar-orange/20">
-              <View className="flex-row items-center justify-between">
-                <View className="flex-1">
-                  <Text className="font-bold text-antar-dark text-lg mb-1">
-                    🧘 Today's Session
-                  </Text>
-                  <Text className="text-antar-orange font-semibold">
-                    {sessionsData?.meetings?.find((session: any) => {
-                      if (!session.dateTime) return false;
-                      const sessionDate = new Date(session.dateTime);
-                      const today = new Date();
-                      return (
-                        sessionDate.toDateString() === today.toDateString()
-                      );
-                    })?.title || "No session today"}
-                  </Text>
-                  <Text className="text-sm text-muted-foreground">
-                    with Dr. Richa • Starting soon
-                  </Text>
+            <LinearGradient
+              colors={["#6E863C", "#236A61", "#112F15"]}
+              locations={[0, 0.55, 1]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{ borderRadius: 16 }}
+              className="w-full rounded-2xl relative overflow-hidden"
+            >
+              <View className="p-5">
+                <View className="flex-row items-center justify-between mb-3">
+                  <View className="flex-1 pr-3">
+                    <Text className="text-white text-[22px] font-semibold">
+                      Your Journey
+                    </Text>
+                    <Text className="text-white text-sm font-medium mt-1">
+                      {sessionsData?.userJourney?.sessionsCompleted || 12}{" "}
+                      Sessions Completed
+                    </Text>
+                  </View>
+                  {/* Monochrome medal icon (black & white) */}
+                  <Svg width={28} height={28} viewBox="0 0 24 24">
+                    {/* Ribbons */}
+                    <Path
+                      d="M7 2h3l1 6H8z"
+                      stroke="#FFFFFF"
+                      strokeWidth={1.5}
+                      fill="none"
+                      strokeLinejoin="round"
+                    />
+                    <Path
+                      d="M14 2h3l-1 6h-3z"
+                      stroke="#FFFFFF"
+                      strokeWidth={1.5}
+                      fill="none"
+                      strokeLinejoin="round"
+                    />
+                    {/* Medal circle */}
+                    <Circle
+                      cx={12}
+                      cy={16}
+                      r={5}
+                      stroke="#FFFFFF"
+                      strokeWidth={1.5}
+                      fill="none"
+                    />
+                    <Circle
+                      cx={12}
+                      cy={16}
+                      r={2}
+                      stroke="#FFFFFF"
+                      strokeWidth={1.2}
+                      fill="none"
+                    />
+                  </Svg>
                 </View>
-                <Button className="bg-antar-orange px-6 py-3 rounded-2xl">
-                  <Text className="text-white font-bold">Join Now</Text>
-                </Button>
+
+                {/* Thin white progress */}
+                <View className="mt-2">
+                  <View className="flex-row justify-between mb-1">
+                    <Text className="text-white/90 text-[12px] font-medium">
+                      Monthly Progress
+                    </Text>
+                    <Text className="text-white text-[12px] font-semibold">
+                      {sessionsData?.userJourney?.monthlyGoal?.completed || 12}/
+                      {sessionsData?.userJourney?.monthlyGoal?.target || 15}{" "}
+                      sessions
+                    </Text>
+                  </View>
+                  <View className="h-[5px] bg-white/25 rounded-full overflow-hidden">
+                    <View
+                      className="h-[5px] bg-white rounded-full"
+                      style={{
+                        width: `${Math.round(
+                          (sessionsData?.userJourney?.monthlyGoal?.progress ??
+                            0.8) * 100
+                        )}%`,
+                      }}
+                    />
+                  </View>
+                </View>
               </View>
+            </LinearGradient>
+          </Section>
+        )}
+
+        {/* Today Session */}
+        {!isLoading && !error && (
+          <Section title="Today Session">
+            <View
+              className="p-4 rounded-2xl border border-antar-orange"
+              style={{
+                shadowColor: "#F18E3A",
+                shadowOpacity: 0.15,
+                shadowOffset: { width: 0, height: 4 },
+                shadowRadius: 10,
+                elevation: 2,
+              }}
+            >
+              {(() => {
+                const upcoming = (sessionsData?.meetings || [])
+                  .filter(
+                    (s: any) =>
+                      s?.dateTime && new Date(s.dateTime) >= new Date()
+                  )
+                  .sort(
+                    (a: any, b: any) =>
+                      new Date(a.dateTime).getTime() -
+                      new Date(b.dateTime).getTime()
+                  )[0];
+                const title = upcoming?.title || "Optimal Movement Therapy";
+                const d = upcoming?.dateTime
+                  ? new Date(upcoming.dateTime)
+                  : null;
+                const dateText = d
+                  ? `${d.toLocaleString("en-US", {
+                      month: "short",
+                    })} ${d.getDate()} ${d
+                      .toLocaleString("en-US", { weekday: "short" })
+                      .toLowerCase()}`
+                  : "Oct 15 wed";
+                const instructor = upcoming?.instructor || "Dr. Richa";
+
+                return (
+                  <>
+                    <View className="mb-3">
+                      <Text className="font-bold text-antar-dark text-lg text-center">
+                        {title}
+                      </Text>
+                      <Text className="text-antar-orange font-medium mt-1">
+                        Next Session is on {dateText} | With {instructor}
+                      </Text>
+                    </View>
+
+                    <GradientCTA title="Join Now" onPress={() => {}} />
+                  </>
+                );
+              })()}
             </View>
           </Section>
         )}
 
-        {/* Weekly Schedule */}
+        {/* Weekly Schedule - Upcoming Events style */}
         {!isLoading && !error && (
-          <Section title="📅 This Week's Sessions">
-            <View className="gap-4">
+          <Section title="Upcoming Events">
+            <View className="-my-3">
               {sessionsData?.meetings
                 ?.filter((session: any) => {
                   if (!session.dateTime) return false;
@@ -657,21 +714,12 @@ export default function ParivarScreen() {
                   );
                   return sessionDate >= now && sessionDate <= weekFromNow;
                 })
-                .map((session: any) => {
+                .map((session: any, index: number, arr: any[]) => {
                   const styling = getSessionStyling(
                     session.sessionType,
                     session.status
                   );
                   const sessionDate = new Date(session.dateTime);
-                  const days = [
-                    "Sunday",
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                  ];
                   const months = [
                     "JAN",
                     "FEB",
@@ -686,107 +734,125 @@ export default function ParivarScreen() {
                     "NOV",
                     "DEC",
                   ];
+                  const weekdays = [
+                    "SUN",
+                    "MON",
+                    "TUE",
+                    "WED",
+                    "THU",
+                    "FRI",
+                    "SAT",
+                  ];
 
                   return (
-                    <View
-                      key={session.id}
-                      className={`flex-row items-center p-4 rounded-2xl ${styling.bgColor} border ${styling.borderColor}`}
-                    >
-                      <View className="w-12 h-14 rounded-lg overflow-hidden mr-4">
-                        <View className="bg-antar-dark h-5 items-center justify-center">
-                          <Text className="text-white text-xs font-bold">
-                            {months[sessionDate.getMonth()]}
+                    <View key={session.id} className="">
+                      <View className="flex-row items-center py-3">
+                        {/* Date badge */}
+                        <View className="w-16 h-fit rounded-xl border border-antar-orange/50 mr-4 overflow-hidden">
+                          <View className="bg-antar-dark h-6 items-center justify-center">
+                            <Text className="text-white text-[10px] font-bold tracking-wider">
+                              {months[sessionDate.getMonth()]}
+                            </Text>
+                          </View>
+                          <View className="flex-1 bg-white/70 items-center justify-center mt-1">
+                            <Text className="text-antar-dark text-2xl font-bold leading-none">
+                              {sessionDate.getDate()}
+                            </Text>
+                            <Text className="text-antar-orange text-[10px] font-semibold">
+                              {weekdays[sessionDate.getDay()]}
+                            </Text>
+                          </View>
+                        </View>
+
+                        {/* Text block */}
+                        <View className="flex-1 pr-3">
+                          <Text className="text-antar-dark font-semibold">
+                            {session.title}
+                          </Text>
+                          <Text className="text-antar-orange font-medium">
+                            {session.subTitle || ""}
+                          </Text>
+                          <Text className="text-muted-foreground text-sm">
+                            Time:{" "}
+                            {sessionDate.toLocaleTimeString("en-US", {
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
                           </Text>
                         </View>
-                        <View className="bg-white flex-1 items-center justify-center">
-                          <Text className="text-antar-dark text-lg font-bold">
-                            {sessionDate.getDate()}
-                          </Text>
+
+                        {/* Right arrow */}
+                        <View className="w-10 h-10 rounded-full bg-antar-orange items-center justify-center">
+                          <Text className="text-white text-lg">→</Text>
                         </View>
                       </View>
-                      <View className="flex-1">
-                        <Text className={`font-semibold ${styling.textColor}`}>
-                          {days[sessionDate.getDay()]} - {session.title}
-                        </Text>
-                        <Text className={`text-sm ${styling.subtitleColor}`}>
-                          {sessionDate.toLocaleTimeString("en-US", {
-                            hour: "numeric",
-                            minute: "2-digit",
-                            hour12: true,
-                          })}{" "}
-                          • {session.status}
-                        </Text>
-                      </View>
-                      {session.status !== "completed" && (
-                        <View
-                          className={`px-3 py-1 rounded-full ${styling.buttonColor}`}
-                        >
-                          <Text
-                            className={`text-xs font-medium ${styling.textColor}`}
-                          >
-                            Remind Me
-                          </Text>
-                        </View>
+                      {/* Divider (not after last card) */}
+                      {index < arr.length - 1 && (
+                        <View className="h-[1px] bg-antar-orange/30" />
                       )}
                     </View>
                   );
                 }) ||
-                mockApiData.weeklySessions.map((session: any) => {
-                  const styling = getSessionStyling(
-                    session.sessionType,
-                    session.status
-                  );
-                  return (
-                    <View
-                      key={session.id}
-                      className={`flex-row items-center p-4 rounded-2xl ${styling.bgColor} border ${styling.borderColor}`}
-                    >
-                      <View className="w-12 h-14 rounded-lg overflow-hidden mr-4">
-                        <View className="bg-antar-dark h-5 items-center justify-center">
-                          <Text className="text-white text-xs font-bold">
-                            {session.date.month}
-                          </Text>
+                mockApiData.weeklySessions.map(
+                  (session: any, index: number, arr: any[]) => {
+                    const styling = getSessionStyling(
+                      session.sessionType,
+                      session.status
+                    );
+                    return (
+                      <View key={session.id} className="">
+                        <View className="flex-row items-center py-3">
+                          {/* Date badge */}
+                          <View className="w-14 h-16 rounded-xl border border-antar-orange/50 mr-4 overflow-hidden">
+                            <View className="bg-antar-dark h-6 items-center justify-center">
+                              <Text className="text-white text-[10px] font-bold tracking-wider">
+                                {session.date.month}
+                              </Text>
+                            </View>
+                            <View className="flex-1 bg-white items-center justify-center">
+                              <Text className="text-antar-dark text-2xl font-bold leading-none">
+                                {session.date.day}
+                              </Text>
+                              <Text className="text-antar-orange text-[10px] font-semibold">
+                                {session.day.toUpperCase()}
+                              </Text>
+                            </View>
+                          </View>
+
+                          {/* Text block */}
+                          <View className="flex-1 pr-3">
+                            <Text className="text-antar-dark font-semibold">
+                              {session.sessionName}
+                            </Text>
+                            <Text className="text-antar-orange font-medium">
+                              {session.description || ""}
+                            </Text>
+                            <Text className="text-muted-foreground text-sm">
+                              Time: {session.time}
+                            </Text>
+                          </View>
+
+                          {/* Right arrow */}
+                          <View className="w-10 h-10 rounded-full bg-antar-orange items-center justify-center">
+                            <Text className="text-white text-lg">→</Text>
+                          </View>
                         </View>
-                        <View className="bg-white flex-1 items-center justify-center">
-                          <Text className="text-antar-dark text-lg font-bold">
-                            {session.date.day}
-                          </Text>
-                        </View>
+                        {/* Divider */}
+                        {index < arr.length - 1 && (
+                          <View className="h-[1px] bg-antar-orange/30" />
+                        )}
                       </View>
-                      <View className="flex-1">
-                        <Text className={`font-semibold ${styling.textColor}`}>
-                          {session.day} - {session.sessionName}
-                        </Text>
-                        <Text className={`text-sm ${styling.subtitleColor}`}>
-                          {session.time} •{" "}
-                          {session.status === "upcoming" && session.daysLeft
-                            ? `${session.daysLeft} day${
-                                session.daysLeft > 1 ? "s" : ""
-                              } left`
-                            : session.status}
-                        </Text>
-                      </View>
-                      {session.status !== "completed" && (
-                        <View
-                          className={`px-3 py-1 rounded-full ${styling.buttonColor}`}
-                        >
-                          <Text
-                            className={`text-xs font-medium ${styling.textColor}`}
-                          >
-                            Remind Me
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                  );
-                })}
+                    );
+                  }
+                )}
             </View>
           </Section>
         )}
 
         {/* Upcoming Highlight */}
         {!isLoading && !error && (
-          <Section title="🎙️ Special Event">
+          <Section title="Special Event">
             {sessionsData?.meetings?.find(
               (session: any) => session.isSpecialEvent === true
             ) ? (
@@ -838,180 +904,6 @@ export default function ParivarScreen() {
                 </Button>
               </View>
             )}
-          </Section>
-        )}
-
-        {/* Community & Toolkit Actions */}
-        <Section title="Your Parivar Access">
-          <View className="flex-row gap-3">
-            <View className="flex-1 p-4 rounded-2xl bg-antar-teal/5 border border-antar-teal/20">
-              <Text className="text-center text-3xl mb-2">💬</Text>
-              <Text className="text-center font-semibold text-antar-dark mb-1">
-                Community
-              </Text>
-              <Text className="text-center text-xs text-muted-foreground">
-                127 members online
-              </Text>
-            </View>
-            <View className="flex-1 p-4 rounded-2xl bg-antar-orange/5 border border-antar-orange/20">
-              <Text className="text-center text-3xl mb-2">🧰</Text>
-              <Text className="text-center font-semibold text-antar-dark mb-1">
-                Toolkit
-              </Text>
-              <Text className="text-center text-xs text-muted-foreground">
-                New January pack
-              </Text>
-            </View>
-          </View>
-        </Section>
-
-        {/* Upcoming Sessions */}
-        {!isLoading && !error && (
-          <Section title="🔮 Coming Up">
-            <View className="gap-3">
-              {sessionsData?.meetings
-                ?.filter((session: any) => {
-                  if (!session.dateTime) return false;
-                  const sessionDate = new Date(session.dateTime);
-                  const now = new Date();
-                  const weekFromNow = new Date(
-                    now.getTime() + 7 * 24 * 60 * 60 * 1000
-                  );
-                  return sessionDate > weekFromNow;
-                })
-                .map((session: any) => {
-                  const styling = getSessionStyling(
-                    session.sessionType,
-                    undefined,
-                    getActionType(session.sessionType)
-                  );
-                  const sessionDate = new Date(session.dateTime);
-                  const months = [
-                    "JAN",
-                    "FEB",
-                    "MAR",
-                    "APR",
-                    "MAY",
-                    "JUN",
-                    "JUL",
-                    "AUG",
-                    "SEP",
-                    "OCT",
-                    "NOV",
-                    "DEC",
-                  ];
-
-                  return (
-                    <View
-                      key={session.id}
-                      className={`p-4 rounded-2xl ${styling.bgColor} border ${styling.borderColor}`}
-                    >
-                      <View className="flex-row items-center justify-between">
-                        <View className="flex-row items-center flex-1">
-                          <View className="w-12 h-14 rounded-lg overflow-hidden mr-3">
-                            <View className="bg-antar-dark h-5 items-center justify-center">
-                              <Text className="text-white text-xs font-bold">
-                                {months[sessionDate.getMonth()]}
-                              </Text>
-                            </View>
-                            <View className="bg-white flex-1 items-center justify-center">
-                              <Text className="text-antar-dark text-lg font-bold">
-                                {sessionDate.getDate()}
-                              </Text>
-                            </View>
-                          </View>
-                          <View className="flex-1">
-                            <Text className="font-bold text-antar-dark">
-                              {session.title}
-                            </Text>
-                            <Text
-                              className={`font-medium text-sm ${styling.textColor}`}
-                            >
-                              {sessionDate.getDate()}{" "}
-                              {months[sessionDate.getMonth()]},{" "}
-                              {sessionDate.toLocaleTimeString("en-US", {
-                                hour: "numeric",
-                                minute: "2-digit",
-                                hour12: true,
-                              })}
-                            </Text>
-                            <Text className="text-xs text-muted-foreground">
-                              {session.subTitle || `"${session.sessionType}"`}
-                            </Text>
-                          </View>
-                        </View>
-                        <View
-                          className={`px-3 py-1 rounded-full ${styling.buttonColor}`}
-                        >
-                          <Text
-                            className={`text-xs font-medium ${styling.textColor}`}
-                          >
-                            {styling.buttonText}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  );
-                }) ||
-                mockApiData.comingUpSessions.map((session: any) => {
-                  const styling = getSessionStyling(
-                    session.sessionType,
-                    undefined,
-                    session.actionType
-                  );
-                  return (
-                    <View
-                      key={session.id}
-                      className={`p-4 rounded-2xl ${styling.bgColor} border ${styling.borderColor}`}
-                    >
-                      <View className="flex-row items-center justify-between">
-                        <View className="flex-row items-center flex-1">
-                          <View className="w-12 h-14 rounded-lg overflow-hidden mr-3">
-                            <View className="bg-antar-dark h-5 items-center justify-center">
-                              <Text className="text-white text-xs font-bold">
-                                {session.date.month}
-                              </Text>
-                            </View>
-                            <View className="bg-white flex-1 items-center justify-center">
-                              <Text className="text-antar-dark text-lg font-bold">
-                                {session.date.day}
-                              </Text>
-                            </View>
-                          </View>
-                          <View className="flex-1">
-                            <Text className="font-bold text-antar-dark">
-                              {session.title}
-                            </Text>
-                            <Text
-                              className={`font-medium text-sm ${styling.textColor}`}
-                            >
-                              {session.dateText}
-                            </Text>
-                            <Text className="text-xs text-muted-foreground">
-                              {session.instructor
-                                ? session.instructor.includes("with")
-                                  ? session.instructor
-                                  : `with ${session.instructor}`
-                                : session.topic
-                                ? `"${session.topic}"`
-                                : session.description}
-                            </Text>
-                          </View>
-                        </View>
-                        <View
-                          className={`px-3 py-1 rounded-full ${styling.buttonColor}`}
-                        >
-                          <Text
-                            className={`text-xs font-medium ${styling.textColor}`}
-                          >
-                            {styling.buttonText}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  );
-                })}
-            </View>
           </Section>
         )}
 
@@ -1193,7 +1085,7 @@ export default function ParivarScreen() {
             ];
             const month = months[new Date().getMonth()];
             const fixedDows = ["MON", "WED", "FRI"];
-            const dow = fixedDows[idx] || "";
+            const day = fixedDows[idx] || "";
             return (
               <View key={idx}>
                 <View className="flex-row items-center py-3">
@@ -1205,9 +1097,9 @@ export default function ParivarScreen() {
                           {month}
                         </Text>
                       </View>
-                      <View className="bg-white w-full items-center justify-center py-3">
+                      <View className="bg-white/70 w-full items-center justify-center py-3">
                         <Text className="text-[10px] text-antar-orange font-semibold">
-                          {dow}
+                          {day}
                         </Text>
                       </View>
                     </View>
@@ -1236,7 +1128,7 @@ export default function ParivarScreen() {
         </View>
       </Section>
 
-      {/* Everything Included (per Figma) */}
+      {/* Everything Included */}
       <Section title="Everything Included">
         <View className="gap-3">
           {[
@@ -1257,7 +1149,7 @@ export default function ParivarScreen() {
         </View>
       </Section>
 
-      {/* Lock notice + CTA for non-subscribers */}
+      {/* CTA */}
       {!hasParivar ? (
         <Section>
           <LinearGradient
