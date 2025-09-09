@@ -7,6 +7,8 @@ import {
   ScrollView,
   Image,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import Svg, { Line } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
@@ -17,6 +19,15 @@ import Section from "~/components/custom/Section";
 import GradientCTA from "~/components/custom/GradientCTA";
 import BestValueBadge from "~/components/custom/BestValueBadge";
 const profileLogo = require("~/assets/images/profileLogo.png");
+
+const benefitsIcons = {
+  liveSessions: require("~/assets/images/icons/yoga.png"),
+  whatsapp: require("~/assets/images/icons/mobile-phone.png"),
+  webinar: require("~/assets/images/icons/online-education.png"),
+  toolkit: require("~/assets/images/icons/tool-box.png"),
+  chat: require("~/assets/images/icons/chat.png"),
+  plans: require("~/assets/images/icons/task.png"),
+};
 
 const mockApiData = {
   userJourney: {
@@ -1032,93 +1043,131 @@ export default function ParivarScreen() {
     <Screen>
       {/* Combined Header + Price Card */}
       <Section>
-        <View className="w-full p-6 rounded-3xl bg-gradient-to-br from-antar-teal/8 via-antar-pink/5 to-antar-orange/8 bg-antar-teal/10 relative">
+        <LinearGradient
+          colors={["#6E863C", "#236A61", "#112F15"]}
+          locations={[0, 0.55, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{ borderRadius: 14 }}
+          className="w-full rounded-3xl relative overflow-hidden"
+        >
           {/* Header Content */}
 
-          <View className="mb-3">
+          <View className="mb-3 p-3">
             <View className="flex-row items-center mb-1">
-              <Image
+              {/* <Image
                 source={profileLogo}
                 style={{ width: 35, height: 35, marginRight: 8 }}
-              />
-              <Text className="text-2xl font-bold text-antar-dark">
-                Antar Parivar
+              /> */}
+              <Text className="text-2xl font-bold text-white">
+                Antar Parivaar
               </Text>
             </View>
-            <Text className="text-base text-muted-foreground">
-              Unlock guided practices, live sessions, and a nurturing community
+            <Text className="text-base text-white/90">
+              Join our parivaar where we make your journey memorable and
+              healthier!
             </Text>
+            <Svg
+              height={1}
+              width="100%"
+              viewBox="0 0 100 1"
+              preserveAspectRatio="none"
+              style={{ marginVertical: 12 }}
+              pointerEvents="none"
+            >
+              <Line
+                x1="0"
+                y1="0.5"
+                x2="100"
+                y2="0.5"
+                stroke="rgba(255,255,255,0.6)"
+                strokeWidth={1}
+                strokeDasharray="3,3"
+              />
+            </Svg>
+            <View className="">
+              {[
+                "Unlock guided practices",
+                "Live sessions",
+                "Nurturing Community",
+              ].map((line, idx) => (
+                <View key={idx} className="flex-row items-center mb-2">
+                  <View className="w-4 h-4 rounded-full bg-white/30 items-center justify-center mr-2">
+                    <Text className="text-white text-[10px]">✓</Text>
+                  </View>
+                  <Text className="text-sm text-white">{line}</Text>
+                </View>
+              ))}
+            </View>
           </View>
 
-          {/* Price + CTA Content */}
-          <View className="border-t border-antar-teal/20 pt-4">
-            <View className="flex-row items-center justify-between mb-3">
-              <View>
-                <Text className="text-sm text-muted-foreground">
-                  Membership
-                </Text>
-                <Text className="text-2xl font-bold text-antar-dark">
-                  ₹199/month
-                </Text>
-              </View>
-            </View>
-            <Text className="mb-4 text-sm text-muted-foreground">
-              Cancel anytime. No hidden fees.
-            </Text>
+          {/* CTA Content */}
+          <View className="mx-3">
             {!hasParivar ? (
               <Button
-                className="bg-antar-orange rounded-full w-full"
+                className="rounded-full w-full bg-antar-orange border-2 border-white shadow"
                 onPress={showPurchaseAlert}
               >
-                <Text className="text-white font-semibold">
-                  Unlock for ₹199/month
-                </Text>
+                <View className="flex-row items-center justify-center gap-2 w-full">
+                  <Text className="text-white font-semibold ml-4">
+                    Unlock for ₹199/month
+                  </Text>
+                  <View className="w-7 h-7 mr-2 rounded-full bg-white items-center justify-center">
+                    <Text className="text-antar-orange text-sm">→</Text>
+                  </View>
+                </View>
               </Button>
             ) : null}
+            <Text className="mt-3 mb-3 text-xs text-white/70 text-center">
+              Cancel anytime. No hidden fees
+            </Text>
           </View>
-        </View>
+        </LinearGradient>
       </Section>
 
-      {/* Benefits Grid */}
-      <Section title="Why join Parivar?">
+      {/* Benefits Grid (styled per Figma with icons) */}
+      <Section title="Why Join Antar Parivaar?">
         <View className="flex-row flex-wrap justify-between gap-3">
           {[
             {
-              icon: "🧘",
               title: "3x/weekly live sessions",
               desc: "Yoga, Breathwork, Mobility",
+              icon: benefitsIcons.liveSessions,
             },
             {
-              icon: "🎙️",
-              title: "Monthly<br />webinar",
-              desc: "+ Live Q&A with experts",
-            },
-            {
-              icon: "🧰",
-              title: "Wellness<br />toolkit",
-              desc: "Fresh monthly resources",
-            },
-            {
-              icon: "💬",
-              title: "24/7 chat",
-              desc: "Continuous guidance & support",
-            },
-            {
-              icon: "📱",
-              title: "WhatsApp community",
+              title: "WhatsApp Community",
               desc: "Private, supportive group",
+              icon: benefitsIcons.whatsapp,
             },
             {
-              icon: "🎯",
-              title: "Personalized<br />plans",
+              title: "Monthly Webinar",
+              desc: "+Live Q&A with experts",
+              icon: benefitsIcons.webinar,
+            },
+            {
+              title: "Wellness Toolkit",
+              desc: "Fresh monthly resources",
+              icon: benefitsIcons.toolkit,
+            },
+            {
+              title: "Personalized Plans",
               desc: "Custom wellness journeys",
+              icon: benefitsIcons.plans,
+            },
+            {
+              title: "24/7 Chat Support",
+              desc: "Continuous support",
+              icon: benefitsIcons.chat,
             },
           ].map((b, idx) => (
-            <View key={idx} className="w-[48%] h-auto mb-3">
-              <View className="p-3 rounded-2xl bg-white/60 h-auto border border-white/40 justify-center items-center">
-                <Text className="text-4xl mb-1">{b.icon}</Text>
+            <View key={idx} className="w-[48%] mb-3">
+              <View className="p-3 rounded-2xl h-36 border border-[#E87D36] justify-center items-center">
+                <Image
+                  source={b.icon}
+                  style={{ width: 32, height: 32, marginBottom: 6 }}
+                />
                 <Text className="font-semibold text-antar-dark text-md text-center leading-tight">
-                  {renderWithLineBreaks(b.title)}
+                  {b.title}
                 </Text>
                 <Text className="text-xs text-muted-foreground text-center mt-1 leading-tight">
                   {b.desc}
@@ -1134,7 +1183,7 @@ export default function ParivarScreen() {
         <View className="rounded-2xl overflow-hidden border border-white/40 bg-white/50 p-2">
           {!hasParivar && (
             <Text className="mt-2 text-sm font-bold text-antar-teal text-center">
-              Included in Antar Parivar
+              Included in Antar Parivaar
             </Text>
           )}
           <View className="flex-row justify-between">
@@ -1168,19 +1217,21 @@ export default function ParivarScreen() {
         </View>
       </Section>
 
-      {/* Everything included */}
-      <Section title="Everything included">
+      {/* Everything Included (per Figma) */}
+      <Section title="Everything Included">
         <View className="gap-3">
           {[
-            "3x/week live sessions (Yoga, Breathwork, Mobility)",
+            "3x/ week live sessions (Yoga, breathwork, mobility)",
             "Monthly expert webinar + Live Q&A",
             "Monthly wellness toolkit",
             "24/7 chat support",
             "Private WhatsApp community access",
             "Personalized wellness plans tailored to your goals",
           ].map((f, idx) => (
-            <View key={idx} className="flex-row items-start gap-3">
-              <Text className="text-xl">✅</Text>
+            <View key={idx} className="flex-row items-center gap-3">
+              <View className="w-3.5 h-3.5 rounded-full bg-[#6E863C] items-center justify-center">
+                <Text className="text-white text-[10px]">✓</Text>
+              </View>
               <Text className="text-base text-antar-dark flex-1">{f}</Text>
             </View>
           ))}
@@ -1192,8 +1243,8 @@ export default function ParivarScreen() {
         <Section>
           <View className="p-4 rounded-2xl bg-antar-teal/5 border border-antar-teal/20">
             <Text className="text-antar-teal font-medium">
-              Unlock full access to join live sessions, webinars, and the
-              private community.
+              Unlock full access to join live sessions, webinars and the private
+              community
             </Text>
           </View>
           <Button
