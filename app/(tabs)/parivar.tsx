@@ -646,7 +646,7 @@ export default function ParivarScreen() {
 
         {/* Today Session */}
         {!isLoading && !error && (
-          <Section title="Today Session">
+          <Section title="Today's Session">
             <View
               className="p-4 rounded-2xl border border-antar-orange"
               style={{
@@ -702,7 +702,7 @@ export default function ParivarScreen() {
 
         {/* Weekly Schedule - Upcoming Events style */}
         {!isLoading && !error && (
-          <Section title="Upcoming Events">
+          <Section title="This Week's Events">
             <View className="-my-3">
               {sessionsData?.meetings
                 ?.filter((session: any) => {
@@ -850,60 +850,227 @@ export default function ParivarScreen() {
           </Section>
         )}
 
-        {/* Upcoming Highlight */}
+        {/* Special Event (Webinar) */}
         {!isLoading && !error && (
           <Section title="Special Event">
-            {sessionsData?.meetings?.find(
-              (session: any) => session.isSpecialEvent === true
-            ) ? (
-              <View className="p-4 rounded-2xl bg-antar-pink/10 border border-antar-pink/20">
-                <Text className="font-bold text-antar-dark mb-2">
-                  Special Wellness Event
-                </Text>
-                <Text className="text-antar-pink font-semibold mb-1">
-                  {sessionsData.meetings.find(
-                    (s: any) => s.isSpecialEvent === true
-                  )?.title || "Join our exclusive wellness session"}
-                </Text>
-                <Text className="text-sm text-muted-foreground mb-3">
-                  {(() => {
-                    const specialSession = sessionsData.meetings.find(
-                      (s: any) => s.isSpecialEvent === true
+            {(() => {
+              const special = sessionsData?.meetings?.find(
+                (s: any) => s.isSpecialEvent
+              );
+              const dateStr = (() => {
+                if (special?.dateTime) {
+                  const d = new Date(special.dateTime);
+                  return d.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "short",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
+                    timeZoneName: "short",
+                  });
+                }
+                return "Sunday, Jan 14 at 5:00 PM IST"; // fallback
+              })();
+
+              return (
+                <View
+                  className="p-3 rounded-2xl border border-antar-orange/60 bg-antar-orange/5"
+                  style={{
+                    shadowColor: "#E87D36",
+                    shadowOpacity: 0.12,
+                    shadowOffset: { width: 0, height: 3 },
+                    shadowRadius: 6,
+                    elevation: 2,
+                  }}
+                >
+                  <View className="flex-row mb-3">
+                    <Image
+                      source={require("~/assets/images/backgrounds/plans-bg.jpg")}
+                      style={{ width: 92, height: 92, borderRadius: 12 }}
+                      resizeMode="cover"
+                    />
+                    <View className="flex-1 ml-4 justify-center">
+                      <Text className="font-semibold text-antar-dark text-base">
+                        {special?.title || "Monthly Expert Webinar"}
+                      </Text>
+                      <Text className="text-antar-orange font-medium mt-[2px]">
+                        Seasonal Wellness : Winter Care
+                      </Text>
+                      <Text className="text-antar-dark mt-2 text-sm">
+                        {dateStr}
+                      </Text>
+                    </View>
+                  </View>
+                  <GradientCTA
+                    title={special ? "Join Now" : "Register Now"}
+                    onPress={() => {}}
+                    style={{ width: "100%" }}
+                  />
+                </View>
+              );
+            })()}
+          </Section>
+        )}
+
+        {/* Events in the Coming Week */}
+        {!isLoading && !error && (
+          <Section title="Upcoming Events">
+            <View>
+              {(() => {
+                const items = (sessionsData?.meetings || [])
+                  .filter((s: any) => s?.dateTime)
+                  .filter((s: any) => {
+                    const d = new Date(s.dateTime);
+                    const now = new Date();
+                    const week = new Date(
+                      now.getTime() + 7 * 24 * 60 * 60 * 1000
                     );
-                    if (specialSession?.dateTime) {
-                      const date = new Date(specialSession.dateTime);
-                      return date.toLocaleDateString("en-US", {
-                        weekday: "long",
-                        month: "long",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      });
-                    }
-                    return "Date TBD";
-                  })()}
-                </Text>
-                <Button className="bg-antar-pink border-antar-pink">
-                  <Text className="text-white font-semibold">Join Now</Text>
-                </Button>
-              </View>
-            ) : (
-              <View className="p-4 rounded-2xl bg-antar-pink/10 border border-antar-pink/20">
-                <Text className="font-bold text-antar-dark mb-2">
-                  Monthly Expert Webinar
-                </Text>
-                <Text className="text-antar-pink font-semibold mb-1">
-                  Seasonal Wellness: Winter Care
-                </Text>
-                <Text className="text-sm text-muted-foreground mb-3">
-                  Sunday, Jan 14 at 5:00 PM IST
-                </Text>
-                <Button className="bg-antar-pink border-antar-pink">
-                  <Text className="text-white font-semibold">Register Now</Text>
-                </Button>
-              </View>
-            )}
+                    return d >= now && d <= week;
+                  })
+                  .sort(
+                    (a: any, b: any) =>
+                      new Date(a.dateTime).getTime() -
+                      new Date(b.dateTime).getTime()
+                  )
+                  .slice(0, 6); // limit length
+
+                if (!items.length)
+                  return (
+                    <Text className="text-sm text-muted-foreground">
+                      No events scheduled in the coming week.
+                    </Text>
+                  );
+
+                const months = [
+                  "JAN",
+                  "FEB",
+                  "MAR",
+                  "APR",
+                  "MAY",
+                  "JUN",
+                  "JUL",
+                  "AUG",
+                  "SEP",
+                  "OCT",
+                  "NOV",
+                  "DEC",
+                ];
+                const weekdays = [
+                  "SUN",
+                  "MON",
+                  "TUES",
+                  "WED",
+                  "THURS",
+                  "FRI",
+                  "SAT",
+                ];
+
+                return items.map((item: any, index: number, arr: any[]) => {
+                  const d = new Date(item.dateTime);
+                  return (
+                    <View key={item.id} className="">
+                      <View className="flex-row items-center py-3">
+                        {/* Date badge */}
+                        <View className="w-16 rounded-xl border border-antar-orange/60 mr-4 overflow-hidden">
+                          <View className="bg-antar-dark h-6 items-center justify-center">
+                            <Text className="text-white text-[10px] font-bold tracking-wider">
+                              {months[d.getMonth()]}
+                            </Text>
+                          </View>
+                          <View className="bg-white items-center justify-center py-1">
+                            <Text className="text-antar-dark text-2xl font-bold leading-none">
+                              {d.getDate()}
+                            </Text>
+                            <Text className="text-antar-orange text-[10px] font-semibold -mt-1">
+                              {weekdays[d.getDay()]}
+                            </Text>
+                          </View>
+                        </View>
+
+                        {/* Text block */}
+                        <View className="flex-1 pr-3">
+                          <Text className="text-antar-dark font-semibold">
+                            {item.title || item.sessionName || "Session"}
+                          </Text>
+                          <Text className="text-antar-orange font-medium">
+                            Seasonal Wellness : Winter Care
+                          </Text>
+                          <Text className="text-muted-foreground text-sm">
+                            Time:{" "}
+                            {d.toLocaleTimeString("en-US", {
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true,
+                            })}
+                          </Text>
+                        </View>
+
+                        {/* Arrow */}
+                        <View className="w-10 h-10 rounded-full bg-antar-orange items-center justify-center">
+                          <Text className="text-white text-lg">→</Text>
+                        </View>
+                      </View>
+                      {index < arr.length - 1 && (
+                        <View className="h-[1px] bg-antar-orange/30" />
+                      )}
+                    </View>
+                  );
+                });
+              })()}
+            </View>
+          </Section>
+        )}
+
+        {/* Your Parivar Access */}
+        {!isLoading && !error && (
+          <Section title="Your Parivar Access">
+            <View className="flex-row flex-wrap -mx-1">
+              {[
+                {
+                  key: "community",
+                  title: "Community Support",
+                  subtitle: "127 Members Online",
+                  icon: require("~/assets/images/icons/chat.png"),
+                },
+                {
+                  key: "toolkit",
+                  title: "Wellness Toolkit",
+                  subtitle: "New January Pack",
+                  icon: require("~/assets/images/icons/tool-box.png"),
+                },
+              ].map((card) => (
+                <View key={card.key} className="w-1/2 px-1 mb-3">
+                  <View
+                    className="rounded-2xl bg-antar-orange/5 border border-antar-orange/40 p-4 items-center"
+                    style={{
+                      shadowColor: "#E87D36",
+                      shadowOpacity: 0.08,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowRadius: 4,
+                      elevation: 1,
+                    }}
+                  >
+                    <Image
+                      source={card.icon}
+                      style={{
+                        width: 44,
+                        height: 44,
+                        tintColor: "#E87D36",
+                        marginBottom: 10,
+                      }}
+                      resizeMode="contain"
+                    />
+                    <Text className="text-antar-dark font-semibold text-center">
+                      {card.title}
+                    </Text>
+                    <Text className="text-muted-foreground text-xs mt-1 text-center">
+                      {card.subtitle}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
           </Section>
         )}
 
