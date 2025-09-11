@@ -179,31 +179,47 @@ export default function RegisterScreen() {
         const { authentication } = response;
         setGoogleLoading(true);
 
+        const api = new RESTApiCall();
+
         // fetch user profile from Google API
         fetch("https://www.googleapis.com/userinfo/v2/me", {
           headers: { Authorization: `Bearer ${authentication?.accessToken}` },
         })
           .then((res) => res.json())
-          .then((data) => {
+          .then(async (data) => {
             // setUserInfo(data);
             console.log("Google user info:", data);
 
-            // Send user info to your Next.js API
-            fetch("https://your-api.com/api/auth/google-login", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: data.email,
-                name: data.name,
-                googleId: data.id,
-                profilePic: data.picture,
-              }),
-            })
-              .then((res) => res.json())
-              .then((apiRes) => {
-                console.log("API response:", apiRes);
-              })
-              .catch((err) => console.log(err));
+            const api = new RESTApiCall();
+            const res = await api.post("auth/google-login", {
+              email: data?.email,
+              googleId: data?.id,
+              profilePic: data?.picture,
+            });
+            if (res?.status === 200) {
+              const storeData = {
+                token: res?.data?.token,
+                ...res?.data?.user,
+              };
+              await AsyncStorage.setItem(
+                "antar-app-access-data",
+                JSON.stringify(storeData)
+              );
+              Toast.show({ type: "success", text1: "Welcome to Antar" });
+              // Prefer explicit flags if provided by API
+              // const isNew = Boolean(res?.data?.isNew);
+              const completeProfile = Boolean(res?.data?.user?.completeProfile);
+              if (completeProfile) {
+                router.replace("/(tabs)/parivar");
+              } else {
+                router.replace("/complete-profile");
+              }
+            } else {
+              Toast.show({
+                type: "error",
+                text1: res?.data?.error || "Invalid OTP",
+              });
+            }
           })
           .catch((err) => console.log(err));
       }
