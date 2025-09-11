@@ -19,6 +19,11 @@ import GoogleG from "~/components/icons/GoogleG";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import GradientCTA from "~/components/custom/GradientCTA";
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+import * as AuthSession from "expo-auth-session";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const signupFoodBg = require("~/assets/images/backgrounds/signup-food-bg.jpg");
 
@@ -29,6 +34,9 @@ export default function RegisterScreen() {
   const [email, setEmail] = React.useState<string>("");
   const [otp, setOtp] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [googleLoading, setGoogleLoading] = React.useState(false);
+
+  const redirectUri = AuthSession.makeRedirectUri();
 
   // 6-digit OTP via 3+3 input boxes
   const OTP_LENGTH = 6;
@@ -151,8 +159,64 @@ export default function RegisterScreen() {
     }
   };
 
+  // ---------- GOOGLE SIGN-IN (Firebase) ----------
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    // Fill these from Google Cloud Console OAuth clients:
+    clientId:
+      "508161950422-nicbib6o9il77gfumttmso5u2hue65s1.apps.googleusercontent.com",
+    iosClientId:
+      "508161950422-g4bns1ehjltut3m4vgh9r3cvpbn1lalh.apps.googleusercontent.com",
+    androidClientId:
+      "508161950422-b49gk476s01c7es9mfhj8tkhvke11hak.apps.googleusercontent.com",
+    // Optional: add scopes. Default includes profile + email.
+    scopes: ["profile", "email"],
+    redirectUri, // ✅ pass the redirectUri
+  });
+
+  React.useEffect(() => {
+    try {
+      if (response?.type === "success") {
+        const { authentication } = response;
+        setGoogleLoading(true);
+
+        // fetch user profile from Google API
+        fetch("https://www.googleapis.com/userinfo/v2/me", {
+          headers: { Authorization: `Bearer ${authentication?.accessToken}` },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            // setUserInfo(data);
+            console.log("Google user info:", data);
+
+            // Send user info to your Next.js API
+            fetch("https://your-api.com/api/auth/google-login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: data.email,
+                name: data.name,
+                googleId: data.id,
+                profilePic: data.picture,
+              }),
+            })
+              .then((res) => res.json())
+              .then((apiRes) => {
+                console.log("API response:", apiRes);
+              })
+              .catch((err) => console.log(err));
+          })
+          .catch((err) => console.log(err));
+      }
+    } catch (e) {
+      console.log("Google Sign-In error:", e);
+      Toast.show({ type: "error", text1: "Google Sign-In failed" });
+    } finally {
+      setGoogleLoading(false);
+    }
+  }, [response]);
+
   const googleSignin = async () => {
-    Toast.show({ type: "info", text1: "Google sign-in coming soon" });
+    await promptAsync();
   };
 
   return (
@@ -317,11 +381,12 @@ export default function RegisterScreen() {
           <Button
             onPress={googleSignin}
             className="w-full h-12 rounded-full bg-white border border-gray-300"
+            disabled={!request || googleLoading}
           >
             <View className="flex-row items-center justify-center gap-3">
               <GoogleG size={20} />
               <Text className="text-black font-medium text-base">
-                Continue with Google
+                {googleLoading ? "Signing in..." : "Continue with Google"}
               </Text>
             </View>
           </Button>
