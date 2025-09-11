@@ -3,8 +3,6 @@ import {
   View,
   Alert,
   ActivityIndicator,
-  RefreshControl,
-  ScrollView,
   Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,12 +10,10 @@ import Svg, { Line, Circle, Path } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import DecoratedHeader from "~/components/custom/DecoratedHeader";
 import Screen from "~/components/custom/Screen";
 import Section from "~/components/custom/Section";
 import GradientCTA from "~/components/custom/GradientCTA";
-import BestValueBadge from "~/components/custom/BestValueBadge";
+import NotificationHeader from "~/components/custom/NotificationHeader";
 const profileLogo = require("~/assets/images/profileLogo.png");
 
 const benefitsIcons = {
@@ -1100,6 +1096,7 @@ export default function ParivarScreen() {
   // Pre-Purchase Marketing Content
   return (
     <Screen>
+      <NotificationHeader avatarSource={profileLogo} />
       {/* Combined Header + Price Card */}
       <Section>
         <LinearGradient

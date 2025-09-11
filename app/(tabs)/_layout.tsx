@@ -67,6 +67,7 @@ export default function TabLayout() {
         <Tabs.Screen name="plans" options={{ href: null }} />
         <Tabs.Screen name="community" options={{ href: null }} />
         <Tabs.Screen name="wellness" options={{ href: null }} />
+        <Tabs.Screen name="notification" options={{ href: null }} />
       </Tabs>
     </SafeAreaProvider>
   );
