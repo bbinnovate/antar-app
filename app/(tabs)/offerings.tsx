@@ -1,393 +1,458 @@
 import * as React from "react";
-import { View, ScrollView, Pressable, Linking } from "react-native";
+import { View, ScrollView, Pressable, Linking, Image } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import DecoratedHeader from "~/components/custom/DecoratedHeader";
+import { LinearGradient } from "expo-linear-gradient";
 import Screen from "~/components/custom/Screen";
 import Section from "~/components/custom/Section";
+import GradientCTA from "~/components/custom/GradientCTA";
 import { router } from "expo-router";
+import { ArrowRight } from "lucide-react-native";
+import Svg, { Path, Circle, Line } from "react-native-svg";
+
+type AttendedCardProps = {
+  title: string;
+  subtitle: string;
+  image: any;
+  route: string;
+};
+
+const AttendedCard = ({ title, subtitle, image, route }: AttendedCardProps) => {
+  return (
+    <Pressable onPress={() => router.push(route as any)} className="w-full">
+      <LinearGradient
+        colors={["#6E863C", "#236A61", "#112F15"]}
+        locations={[0, 0.55, 1]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ borderRadius: 18, overflow: "hidden", position: "relative" }}
+      >
+        <View className="flex-row items-center p-3">
+          <Image
+            source={image}
+            style={{ width: 96, height: 96, borderRadius: 12 }}
+            resizeMode="cover"
+          />
+          <View className="flex-1 ml-3">
+            <Text className="text-white text-lg font-extrabold">{title}</Text>
+            <View className="h-[1px] bg-white/40 my-2" />
+            <Text className="text-white text-sm">{subtitle}</Text>
+          </View>
+        </View>
+      </LinearGradient>
+    </Pressable>
+  );
+};
 
 export default function OfferingsScreen() {
   return (
     <Screen>
-      <DecoratedHeader
-        title="Antar Offerings"
-        subtitle="Transform your wellness journey with personalized experiences"
-      />
-
-      <View className="px-6">
-        <View className="flex-row items-center justify-center mb-2">
-          <Text className="text-2xl font-bold text-antar-orange mr-2">
-            100K+
+      {/* Inline gradient header (no separate component) */}
+      <View className="w-full mt-2">
+        <LinearGradient
+          colors={["#6E863C", "#236A61", "#112F15"]}
+          locations={[0, 0.55, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            borderRadius: 16,
+            position: "relative",
+            paddingVertical: 20,
+            paddingHorizontal: 20,
+          }}
+        >
+          <Text className="text-white text-xl font-bold text-center">
+            Antar Offerings
           </Text>
-          <Text className="font-semibold text-antar-dark">Trusted Users</Text>
-        </View>
-        <Text className="text-xs text-muted-foreground text-center">
-          Join thousands who have transformed their health with Antar
-        </Text>
+          <Text className="text-white/90 text-sm font-medium text-center mt-2 leading-5 px-2">
+            Transform your wellness journey with personalized experiences
+          </Text>
+        </LinearGradient>
       </View>
 
-      <Section title="">
-        <View className="flex flex-col gap-3">
-          <Card className="border-antar-teal/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-antar-teal">
-                <Text className="text-lg font-semibold">
-                  🏥 Ailment Management
-                </Text>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Text className="text-muted-foreground mb-3">
-                Comprehensive solutions for 8 major health areas using holistic
-                approaches to identify and address root causes
-              </Text>
+      {/* Ailment Management Section */}
+      <Section
+        title="Ailment Management"
+        subtitle="Comprehensive solutions for 8 major health areas using holistic approaches to identify and address root causes"
+      >
+        <View className="flex flex-col gap-3 mb-4 mt-1">
+          {(() => {
+            const items = [
+              {
+                key: "bone-joint",
+                label: "Bone & Joint",
+                route: "/ailment/bone-joint",
+                icon: "bone",
+              },
+              {
+                key: "gut-health",
+                label: "Gut Health",
+                route: "/ailment/gut-health",
+                icon: "gut",
+              },
+              {
+                key: "metabolic",
+                label: "Metabolic Health",
+                route: "/ailment/metabolic",
+                icon: "metabolic",
+              },
+              {
+                key: "liver-kidney",
+                label: "Liver & Kidney",
+                route: "/ailment/liver-kidney",
+                icon: "liver",
+              },
+              {
+                key: "cardiovascular",
+                label: "Cardiovascular",
+                route: "/ailment/cardiovascular",
+                icon: "heart",
+              },
+              {
+                key: "neurological",
+                label: "Neurological Health",
+                route: "/ailment/neurological",
+                icon: "brain",
+              },
+              {
+                key: "skin",
+                label: "Skin Health",
+                route: "/ailment/skin-health",
+                icon: "skin",
+              },
+              {
+                key: "women",
+                label: "Women's Health",
+                route: "/ailment/womens-health",
+                icon: "women",
+              },
+            ];
 
-              <Text className="text-sm font-medium text-antar-dark mb-3">
-                8 Major Health Areas We Manage:
-              </Text>
+            const Icon = ({ name }: { name: string }) => {
+              const common = {
+                stroke: "#FFFFFF",
+                strokeWidth: 1.8,
+                strokeLinecap: "round" as const,
+                strokeLinejoin: "round" as const,
+              };
+              switch (name) {
+                case "bone":
+                  return (
+                    <Svg width={26} height={26} viewBox="0 0 24 24">
+                      <Path
+                        d="M7 14.5 14.5 7M9.5 5.5a2.5 2.5 0 1 0-4 3 2.5 2.5 0 1 0 3 4 2.5 2.5 0 1 0 4 3 2.5 2.5 0 1 0 3-4 2.5 2.5 0 1 0-4-3"
+                        fill="none"
+                        {...common}
+                      />
+                    </Svg>
+                  );
+                case "gut":
+                  return (
+                    <Svg width={26} height={26} viewBox="0 0 24 24">
+                      <Path
+                        d="M8 4v11a3 3 0 0 0 6 0V7a2 2 0 0 1 4 0v6a6 6 0 0 1-12 0V6a3 3 0 0 0-3 3v3"
+                        fill="none"
+                        {...common}
+                      />
+                    </Svg>
+                  );
+                case "metabolic":
+                  return (
+                    <Svg width={26} height={26} viewBox="0 0 24 24">
+                      <Circle cx={12} cy={12} r={5.5} {...common} fill="none" />
+                      <Circle cx={12} cy={6} r={1.5} fill="#FFFFFF" />
+                      <Circle cx={16.5} cy={12} r={1.5} fill="#FFFFFF" />
+                      <Circle cx={12} cy={18} r={1.5} fill="#FFFFFF" />
+                      <Circle cx={7.5} cy={12} r={1.5} fill="#FFFFFF" />
+                    </Svg>
+                  );
+                case "liver":
+                  return (
+                    <Svg width={26} height={26} viewBox="0 0 24 24">
+                      <Path
+                        d="M3.5 13.5c1-5 4-8 9.5-8h3a4 4 0 0 1 4 5.5l-.8 2.1A6 6 0 0 1 13.5 18h-1c-2.5 0-5.5-1-8-4.5Z"
+                        fill="none"
+                        {...common}
+                      />
+                      <Path d="M14 9a2 2 0 0 0-2 2v3" {...common} />
+                    </Svg>
+                  );
+                case "heart":
+                  return (
+                    <Svg width={26} height={26} viewBox="0 0 24 24">
+                      <Path
+                        d="M12 20s-5.5-4.5-8-7.7C1.7 10.2 2 6.5 5 5.2c2.2-.9 4.1.3 5 1.6 1-1.3 2.8-2.5 5-1.6 3 1.3 3.3 5 1 7.1-2.5 3.2-8 7.7-8 7.7Z"
+                        fill="none"
+                        {...common}
+                      />
+                    </Svg>
+                  );
+                case "brain":
+                  return (
+                    <Svg width={26} height={26} viewBox="0 0 24 24">
+                      <Path
+                        d="M9 5a3 3 0 0 0-3 3v1.2a3 3 0 0 0 0 5.6V16a3 3 0 0 0 3 3h1V5H9Zm5 0h1a3 3 0 0 1 3 3v1.2a3 3 0 0 1 0 5.6V16a3 3 0 0 1-3 3h-1V5Z"
+                        fill="none"
+                        {...common}
+                      />
+                    </Svg>
+                  );
+                case "skin":
+                  return (
+                    <Svg width={26} height={26} viewBox="0 0 24 24">
+                      <Path
+                        d="M12 4c-2.5 3-4 4-4 6a4 4 0 0 0 8 0c0-2-1.5-3-4-6Z"
+                        fill="none"
+                        {...common}
+                      />
+                      <Path d="M9 15c.4 1.2 1.6 2 3 2s2.6-.8 3-2" {...common} />
+                    </Svg>
+                  );
+                case "women":
+                  return (
+                    <Svg width={26} height={26} viewBox="0 0 24 24">
+                      <Circle cx={12} cy={8} r={4} fill="none" {...common} />
+                      <Line x1={12} y1={12} x2={12} y2={20} {...common} />
+                      <Line x1={9} y1={17} x2={15} y2={17} {...common} />
+                    </Svg>
+                  );
+                default:
+                  return null;
+              }
+            };
 
-              <View className="flex flex-col gap-3 mb-4">
-                <View className="flex-row gap-3">
-                  <Pressable
-                    className="flex-1"
-                    onPress={() => router.push("/ailment/gut-health")}
-                  >
-                    <Card className="border-antar-teal/20">
-                      <CardContent className="p-3">
-                        <Text className="text-lg text-center mb-1">🦋</Text>
-                        <Text className="font-semibold text-antar-dark text-center text-xs">
-                          Gut Health
-                        </Text>
-                        <Text className="text-xs text-muted-foreground text-center mt-1">
-                          GERD, IBS
-                        </Text>
-                      </CardContent>
-                    </Card>
-                  </Pressable>
-                  <Pressable
-                    className="flex-1"
-                    onPress={() => router.push("/ailment/bone-joint")}
-                  >
-                    <Card className="border-antar-orange/20">
-                      <CardContent className="p-3">
-                        <Text className="text-lg text-center mb-1">🦴</Text>
-                        <Text className="font-semibold text-antar-dark text-center text-xs">
-                          Bone & Joint
-                        </Text>
-                        <Text className="text-xs text-muted-foreground text-center mt-1">
-                          Arthritis
-                        </Text>
-                      </CardContent>
-                    </Card>
-                  </Pressable>
+            return items.map((item) => (
+              <Pressable
+                key={item.key}
+                onPress={() => router.push(item.route as any)}
+                className="w-full"
+              >
+                <View
+                  className="flex-row items-center justify-between border border-antar-orange bg-antar-orange/5 rounded-xl px-3 py-3"
+                  style={{
+                    shadowColor: "#FF772F",
+                    shadowOpacity: 0.04,
+                    shadowRadius: 3,
+                    shadowOffset: { width: 0, height: 1 },
+                    elevation: 1,
+                  }}
+                >
+                  <View className="flex-row items-center gap-3 flex-1">
+                    <View className="w-12 h-12 rounded-lg bg-antar-orange items-center justify-center">
+                      <Icon name={item.icon} />
+                    </View>
+                    <Text
+                      className="text-sm font-semibold text-antar-dark"
+                      numberOfLines={1}
+                    >
+                      {item.label}
+                    </Text>
+                  </View>
+                  <View className="w-8 h-8 rounded-full bg-antar-orange items-center justify-center">
+                    <ArrowRight size={18} color="#FFFFFF" />
+                  </View>
                 </View>
-
-                <View className="flex-row gap-3">
-                  <Pressable
-                    className="flex-1"
-                    onPress={() => router.push("/ailment/metabolic")}
-                  >
-                    <Card className="border-antar-teal/20">
-                      <CardContent className="p-3">
-                        <Text className="text-lg text-center mb-1">⚡</Text>
-                        <Text className="font-semibold text-antar-dark text-center text-xs">
-                          Metabolic
-                        </Text>
-                        <Text className="text-xs text-muted-foreground text-center mt-1">
-                          Diabetes
-                        </Text>
-                      </CardContent>
-                    </Card>
-                  </Pressable>
-                  <Pressable
-                    className="flex-1"
-                    onPress={() => router.push("/ailment/womens-health")}
-                  >
-                    <Card className="border-antar-pink/30">
-                      <CardContent className="p-3">
-                        <Text className="text-lg text-center mb-1">🌸</Text>
-                        <Text className="font-semibold text-antar-dark text-center text-xs">
-                          Women's Health
-                        </Text>
-                        <Text className="text-xs text-muted-foreground text-center mt-1">
-                          PCOS
-                        </Text>
-                      </CardContent>
-                    </Card>
-                  </Pressable>
-                </View>
-
-                <View className="flex-row gap-3">
-                  <Pressable
-                    className="flex-1"
-                    onPress={() => router.push("/ailment/cardiovascular")}
-                  >
-                    <Card className="border-antar-orange/20">
-                      <CardContent className="p-3">
-                        <Text className="text-lg text-center mb-1">❤️</Text>
-                        <Text className="font-semibold text-antar-dark text-center text-xs">
-                          Cardiovascular
-                        </Text>
-                        <Text className="text-xs text-muted-foreground text-center mt-1">
-                          Heart Disease
-                        </Text>
-                      </CardContent>
-                    </Card>
-                  </Pressable>
-                  <Pressable
-                    className="flex-1"
-                    onPress={() => router.push("/ailment/liver-kidney")}
-                  >
-                    <Card className="border-antar-teal/20">
-                      <CardContent className="p-3">
-                        <Text className="text-lg text-center mb-1">🫁</Text>
-                        <Text className="font-semibold text-antar-dark text-center text-xs">
-                          Liver & Kidney
-                        </Text>
-                        <Text className="text-xs text-muted-foreground text-center mt-1">
-                          Fatty Liver
-                        </Text>
-                      </CardContent>
-                    </Card>
-                  </Pressable>
-                </View>
-
-                <View className="flex-row gap-3">
-                  <Pressable
-                    className="flex-1"
-                    onPress={() => router.push("/ailment/neurological")}
-                  >
-                    <Card className="border-antar-orange/20">
-                      <CardContent className="p-3">
-                        <Text className="text-lg text-center mb-1">🧠</Text>
-                        <Text className="font-semibold text-antar-dark text-center text-xs">
-                          Neurological
-                        </Text>
-                        <Text className="text-xs text-muted-foreground text-center mt-1">
-                          Alzheimer's
-                        </Text>
-                      </CardContent>
-                    </Card>
-                  </Pressable>
-                  <Pressable
-                    className="flex-1"
-                    onPress={() => router.push("/ailment/skin-health")}
-                  >
-                    <Card className="border-antar-pink/30">
-                      <CardContent className="p-3">
-                        <Text className="text-lg text-center mb-1">✨</Text>
-                        <Text className="font-semibold text-antar-dark text-center text-xs">
-                          Skin Health
-                        </Text>
-                        <Text className="text-xs text-muted-foreground text-center mt-1">
-                          Acne, Psoriasis
-                        </Text>
-                      </CardContent>
-                    </Card>
-                  </Pressable>
-                </View>
-              </View>
-
-              <Button
-                className="w-full bg-antar-teal"
-                onPress={() =>
-                  Linking.openURL(
-                    "https://knowtheantar.com/pages/ailment-management"
-                  )
-                }
-              >
-                <Text className="font-semibold text-white">
-                  Get Free Consultation
-                </Text>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-antar-teal/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-antar-teal">
-                <Text className="text-lg font-semibold">🏥 Physiotherapy</Text>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Text className="text-muted-foreground mb-3">
-                Evidence-based physical therapy treatments for movement
-                restoration and pain management
-              </Text>
-              <Button
-                className="w-full bg-antar-teal"
-                onPress={() => router.push("/physiotherapy")}
-              >
-                <Text className="font-semibold text-white">Learn More</Text>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-antar-orange/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-antar-orange">
-                <Text className="text-lg font-semibold">
-                  🥗 Curative & Creative Nutrition
-                </Text>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Text className="text-muted-foreground mb-3">
-                Personalized nutrition plans that heal, nourish, and support
-                your body's natural processes
-              </Text>
-              <Button
-                className="w-full bg-antar-orange"
-                onPress={() => router.push("/nutrition")}
-              >
-                <Text className="font-semibold text-white">Learn More</Text>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-antar-pink/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-antar-dark">
-                <Text className="text-lg font-semibold">
-                  🧠 Mental & Emotional Wellness
-                </Text>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Text className="text-muted-foreground mb-3">
-                Holistic mental health support through counseling, mindfulness,
-                and emotional balance techniques
-              </Text>
-              <Button
-                className="w-full bg-antar-pink border-antar-pink"
-                onPress={() => router.push("/mental-wellness")}
-              >
-                <Text className="font-semibold text-antar-dark">
-                  Start Healing
-                </Text>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-antar-teal/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-antar-teal">
-                <Text className="text-lg font-semibold">
-                  🏃‍♂️ Optimal Movement Therapy
-                </Text>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Text className="text-muted-foreground mb-3">
-                Customized movement programs combining yoga, functional fitness,
-                and therapeutic exercises
-              </Text>
-              <Button
-                className="w-full bg-antar-teal"
-                onPress={() => router.push("/optimal-movement")}
-              >
-                <Text className="font-semibold text-white">Begin Moving</Text>
-              </Button>
-            </CardContent>
-          </Card>
+              </Pressable>
+            ));
+          })()}
         </View>
       </Section>
 
-      <Section title="🎯 How It Works">
-        <Text className="text-muted-foreground mb-4">
-          Our proven 3-step process for sustainable wellness transformation
-        </Text>
-        <View className="flex flex-col gap-4">
-          <Card className="border-antar-teal/20 bg-antar-teal/5">
-            <CardContent className="p-4">
-              <View className="flex-row items-center mb-2">
-                <View className="w-8 h-8 rounded-full bg-antar-teal mr-3 items-center justify-center">
-                  <Text className="text-white font-bold text-sm">1</Text>
-                </View>
-                <Text className="font-semibold text-antar-dark">
-                  We start with YOU
-                </Text>
-              </View>
-              <Text className="text-muted-foreground text-sm">
-                Detailed one-on-one assessment of your blood parameters, medical
-                history, lifestyle, and goals to understand what your body truly
-                needs.
-              </Text>
-            </CardContent>
-          </Card>
-
-          <Card className="border-antar-orange/20 bg-antar-orange/5">
-            <CardContent className="p-4">
-              <View className="flex-row items-center mb-2">
-                <View className="w-8 h-8 rounded-full bg-antar-orange mr-3 items-center justify-center">
-                  <Text className="text-white font-bold text-sm">2</Text>
-                </View>
-                <Text className="font-semibold text-antar-dark">
-                  We build YOUR plan
-                </Text>
-              </View>
-              <Text className="text-muted-foreground text-sm">
-                Personalized, customized and individualized holistic roadmap
-                rooted in modern science and ancient wisdom, crafted to fit your
-                routine and preferences.
-              </Text>
-            </CardContent>
-          </Card>
-
-          <Card className="border-antar-pink/30 bg-antar-pink/10">
-            <CardContent className="p-4">
-              <View className="flex-row items-center mb-2">
-                <View className="w-8 h-8 rounded-full bg-antar-dark mr-3 items-center justify-center">
-                  <Text className="text-white font-bold text-sm">3</Text>
-                </View>
-                <Text className="font-semibold text-antar-dark">
-                  We walk WITH you
-                </Text>
-              </View>
-              <Text className="text-muted-foreground text-sm">
-                Stay on track with regular check-ins and daily WhatsApp support
-                (9am-6pm IST). We're by your side to guide, motivate and support
-                at every step.
-              </Text>
-            </CardContent>
-          </Card>
-        </View>
-      </Section>
-
-      <Section title="🌱 Prevention of Ailments">
-        <Text className="text-muted-foreground mb-4">
-          Proactive wellness programs to prevent health issues before they start
-        </Text>
-        <Card className="border-antar-teal/20 bg-antar-teal/5">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-antar-teal">
-              <Text className="text-lg font-semibold">
-                L.I.V Preventive Wellness Program
-              </Text>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Text className="text-muted-foreground mb-3">
-              Our sustainable approach focuses on identifying and addressing
-              root causes to support your body's natural ability to heal and
-              maintain optimal health.
+      {/* Our Standalone Services - Gradient Card */}
+      <Section title="Our Standalone Services">
+        <LinearGradient
+          colors={["#6E863C", "#236A61", "#112F15"]}
+          locations={[0, 0.55, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{ borderRadius: 16, position: "relative", overflow: "hidden" }}
+        >
+          <View className="px-5 pt-5 pb-4">
+            <Text className="text-white font-semibold text-center text-xl leading-6">
+              L.I.V Preventive Wellness Program
             </Text>
-            <Text className="text-xs text-antar-teal mb-3 font-medium">
-              ✨ Cultivate longevity, immunity, and vitality
+            <Text className="text-white text-center text-sm leading-5 mt-2">
+              (Longevity, Immunity & Vitality)
             </Text>
-            <Button
-              className="w-full bg-antar-teal"
+            <Text className="text-white text-center text-sm leading-5 mt-3">
+              Our sustainable approach tackles root causes to support natural
+              healing & optimal health.
+            </Text>
+
+            {/* Preview image */}
+            <View className="mt-4 mb-4 rounded-xl overflow-hidden">
+              <Image
+                source={require("~/assets/images/backgrounds/welcome-bg.jpg")}
+                style={{ width: "100%", height: 200 }}
+                resizeMode="cover"
+              />
+            </View>
+
+            <Text className="text-white font-semibold text-center text-xl">
+              Prevention of Ailments
+            </Text>
+            <Text className="text-white text-center text-sm leading-5 mt-1">
+              Proactive wellness programs to prevent health issues before they
+              start
+            </Text>
+
+            {/* CTA using shared GradientCTA */}
+            <GradientCTA
+              title="Begin Your Journey"
               onPress={() => router.push("/liv-preventive")}
+              style={{ marginTop: 16 }}
             >
-              <Text className="font-semibold text-white">
-                Explore L.I.V Program
+              <Text className="text-white font-semibold text-sm mr-2">
+                Begin Your Journey
               </Text>
-            </Button>
-          </CardContent>
-        </Card>
+              <View className="w-6 h-6 bg-white rounded-full items-center justify-center">
+                <ArrowRight size={14} color="#FF772F" strokeWidth={2.5} />
+              </View>
+            </GradientCTA>
+          </View>
+        </LinearGradient>
       </Section>
+
+      <Section title="">
+        <View className="flex flex-col gap-4">
+          <AttendedCard
+            title="Physiotherapy"
+            subtitle="Evidence-based therapy for pain relief & mobility."
+            image={require("~/assets/images/backgrounds/welcome-bg.jpg")}
+            route="/physiotherapy"
+          />
+          <AttendedCard
+            title="Curative & Creative Nutrition"
+            subtitle="Personalized nutrition to heal, nourish & support your body."
+            image={require("~/assets/images/backgrounds/nutrition-bg.jpg")}
+            route="/nutrition"
+          />
+          <AttendedCard
+            title="Mental & Emotional Wellness"
+            subtitle="Holistic mental health support with counselling & mindfulness."
+            image={require("~/assets/images/backgrounds/welcome-bg.jpg")}
+            route="/mental-wellness"
+          />
+          <AttendedCard
+            title="Optimal Movement Therapy"
+            subtitle="Customized movement with yoga, fitness & therapy exercises."
+            image={require("~/assets/images/backgrounds/plans-bg.jpg")}
+            route="/optimal-movement"
+          />
+        </View>
+      </Section>
+
+      <Section
+        title="How it Works?"
+        subtitle="Our proven 3-step process for sustainable wellness transformation"
+      >
+        {(() => {
+          const steps = [
+            {
+              title: "We Start with You",
+              desc: "Detailed one-on-one assessment of your blood parameters, medical history, lifestyle and goals to understand what your body truly needs.",
+              emphasize: true,
+            },
+            {
+              title: "We Build YOUR Plan",
+              desc: "Personalized holistic roadmap blending science & ancient wisdom, tailored to your routine.",
+            },
+            {
+              title: "We Walk WITH You",
+              desc: "Stay on track with daily WhatsApp support (9am-6pm IST) & regular check-ins.",
+            },
+          ];
+
+          return (
+            <View style={{ marginTop: 4, position: "relative" }}>
+              {/* Single vertical connector line */}
+              <View
+                style={{
+                  position: "absolute",
+                  left: 15,
+                  top: 4,
+                  bottom: 10,
+                  width: 2,
+                  backgroundColor: "#FF772F",
+                }}
+              />
+
+              {steps.map((s, idx) => (
+                <View key={idx} className="flex-row mb-6">
+                  {/* Timeline left column */}
+                  <View style={{ width: 32 }}>
+                    <View className="items-center">
+                      {/* Dot marker */}
+                      {idx === 0 ? (
+                        <View
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: 12,
+                            backgroundColor: "transparent",
+                            borderWidth: 3,
+                            borderColor: "#FF772F",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            marginTop: 2,
+                          }}
+                        >
+                          <View
+                            style={{
+                              width: 14,
+                              height: 14,
+                              borderRadius: 7,
+                              backgroundColor: "#FF772F",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <View
+                              style={{
+                                width: 6,
+                                height: 6,
+                                borderRadius: 3,
+                                backgroundColor: "#FFFFFF",
+                              }}
+                            />
+                          </View>
+                        </View>
+                      ) : (
+                        <View
+                          style={{
+                            width: 12,
+                            height: 12,
+                            borderRadius: 6,
+                            backgroundColor: "#FF772F",
+                            marginTop: 4,
+                          }}
+                        />
+                      )}
+                    </View>
+                  </View>
+
+                  {/* Content right column */}
+                  <View className="flex-1">
+                    <Text
+                      className={`font-semibold ${
+                        s.emphasize ? "text-antar-orange" : "text-antar-dark"
+                      } text-xl`}
+                    >
+                      {s.title}
+                    </Text>
+                    <Text className="text-sm mt-1">
+                      {s.desc}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          );
+        })()}
+      </Section>
+
+      {/** Removed legacy Prevention of Ailments section as requested **/}
     </Screen>
   );
 }
