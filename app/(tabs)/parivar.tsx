@@ -4,6 +4,7 @@ import {
   Alert,
   ActivityIndicator,
   Image,
+  ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Line, Circle, Path } from "react-native-svg";
@@ -13,8 +14,12 @@ import { Button } from "~/components/ui/button";
 import Screen from "~/components/custom/Screen";
 import Section from "~/components/custom/Section";
 import GradientCTA from "~/components/custom/GradientCTA";
+import { RazorpayService } from "~/lib/services/razorpay-service";
+import { RAZORPAY_CONFIG } from "~/lib/config/razorpay-config";
+import Toast from "react-native-toast-message";
 import NotificationHeader from "~/components/custom/NotificationHeader";
 const profileLogo = require("~/assets/images/profileLogo.png");
+const userAvatar = require("~/assets/images/user.png");
 
 const benefitsIcons = {
   liveSessions: require("~/assets/images/icons/yoga.png"),
@@ -306,6 +311,12 @@ export default function ParivarScreen() {
   // TODO: Replace with real subscription state from API/AsyncStorage
   const [hasParivar, setHasParivar] = React.useState(false); // Set to true for testing API
 
+  const [isPaymentLoading, setIsPaymentLoading] = React.useState(false);
+  const [isCheckingSubscription, setIsCheckingSubscription] = React.useState(
+    true
+  );
+  const scrollViewRef = React.useRef<ScrollView>(null);
+
   // API state management
   const [sessionsData, setSessionsData] = React.useState<any>(mockApiData);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -445,19 +456,105 @@ export default function ParivarScreen() {
         },
         {
           text: "Buy Now",
-          onPress: () => {
-            setHasParivar(true);
-            Alert.alert("Success!", "Welcome to Antar Parivar! 🎉");
+          onPress: () => handleParivarPayment(),
+        },
+      ]
+    );
+  };
+
+  // Check subscription status on component mount
+  React.useEffect(() => {
+    checkSubscription();
+  }, []);
+
+  const checkSubscription = async () => {
+    try {
+      const hasActiveSubscription = await RazorpayService.checkParivarSubscription();
+      setHasParivar(hasActiveSubscription);
+    } catch (error) {
+      console.error("Error checking subscription:", error);
+    } finally {
+      setIsCheckingSubscription(false);
+    }
+  };
+
+  const refreshSubscriptionStatus = async () => {
+    try {
+      const hasActiveSubscription = await RazorpayService.checkParivarSubscription();
+      setHasParivar(hasActiveSubscription);
+    } catch (error) {
+      console.error("Error refreshing subscription status:", error);
+    }
+  };
+
+  const handleParivarPayment = async () => {
+    setIsPaymentLoading(true);
+
+    try {
+      const result = await RazorpayService.processParivarPayment(
+        RAZORPAY_CONFIG.KEY_ID,
+        "antar_parivar_monthly"
+      );
+
+      if (result.success) {
+        setHasParivar(true);
+
+        await refreshSubscriptionStatus();
+
+        // Optional: Scroll to top to show the new dashboard
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      }
+    } catch (error: any) {
+      console.error("Payment process error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Payment Error",
+        text2: error?.message || "Something went wrong",
+      });
+    } finally {
+      setIsPaymentLoading(false);
+    }
+  };
+
+  const handleCancelSubscription = () => {
+    Alert.alert(
+      "Cancel Subscription",
+      "Are you sure you want to cancel your Antar Parivar membership?",
+      [
+        {
+          text: "Keep Subscription",
+          style: "cancel",
+        },
+        {
+          text: "Cancel Subscription",
+          style: "destructive",
+          onPress: async () => {
+            await RazorpayService.cancelParivarSubscription();
+            setHasParivar(false);
           },
         },
       ]
     );
   };
 
+  // Show loading state while checking subscription
+  if (isCheckingSubscription) {
+    return (
+      <Screen>
+        <NotificationHeader avatarSource={userAvatar} />
+        <View className="flex-1 items-center justify-center">
+          <View className="w-6 h-6 border-2 border-antar-teal/30 border-t-antar-teal rounded-full animate-spin" />
+          <Text className="mt-3 text-muted-foreground">Loading...</Text>
+        </View>
+      </Screen>
+    );
+  }
+
   // Post-Purchase Dashboard Content
   if (hasParivar) {
     return (
       <Screen>
+        <NotificationHeader avatarSource={userAvatar} />
         {/* <DecoratedHeader
           title="Welcome to Antar Parivar"
           subtitle="Your wellness journey starts now! 🧘‍♂️"
@@ -1083,7 +1180,7 @@ export default function ParivarScreen() {
             </View>
             <Button
               className="bg-red-50 border border-red-300"
-              onPress={() => setHasParivar(false)}
+              onPress={() => handleCancelSubscription()}
             >
               <Text className="text-red-600 text-sm">Cancel</Text>
             </Button>
@@ -1096,7 +1193,7 @@ export default function ParivarScreen() {
   // Pre-Purchase Marketing Content
   return (
     <Screen>
-      <NotificationHeader avatarSource={profileLogo} />
+      <NotificationHeader avatarSource={userAvatar} />
       {/* Combined Header + Price Card */}
       <Section>
         <LinearGradient
@@ -1161,8 +1258,13 @@ export default function ParivarScreen() {
           <View className="mx-3">
             {!hasParivar ? (
               <GradientCTA
-                title="Unlock for ₹199/month"
+                title={
+                  isPaymentLoading
+                    ? "Processing Payment..."
+                    : "Unlock for ₹199/month"
+                }
                 onPress={showPurchaseAlert}
+                disabled={isPaymentLoading}
               />
             ) : null}
             <Text className="mt-3 mb-3 text-xs text-white/70 text-center">
@@ -1332,7 +1434,12 @@ export default function ParivarScreen() {
             </View>
           </LinearGradient>
           <GradientCTA
-            title="Unlock for ₹199/month"
+            disabled={isPaymentLoading}
+            title={
+              isPaymentLoading
+                ? "Processing Payment..."
+                : "Unlock for ₹199/month"
+            }
             style={{ marginTop: 12 }}
             onPress={showPurchaseAlert}
           />

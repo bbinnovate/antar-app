@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Linking,
+  Platform,
+  StatusBar,
 } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -14,6 +16,8 @@ import Section from "~/components/custom/Section";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Circle, Path, Line } from "react-native-svg";
+import NotificationHeader from "~/components/custom/NotificationHeader";
+const userAvatar = require("~/assets/images/user.png");
 
 type FaceVariant = "bloat" | "irritated" | "tired" | "cycle" | "haywire";
 
@@ -70,7 +74,13 @@ const FaceIcon = ({ variant = "bloat" }: { variant?: FaceVariant }) => {
 
 export default function GutHealthScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView
+      className="flex-1 bg-background"
+      style={{
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      }}
+    >
+      <NotificationHeader avatarSource={userAvatar} />
       {/* Custom Header with Back Button */}
       <View className="flex-row items-center px-6 py-4 border-b border-border">
         <TouchableOpacity onPress={() => router.back()} className="mr-4">
@@ -330,7 +340,8 @@ export default function GutHealthScreen() {
                     "12 Movement Therapy Sessions",
                     "2 Mental Wellness Sessions",
                   ],
-                  url: "https://knowtheantar.com/products/antar-gut-health-program?variant=50851499245700",
+                  url:
+                    "https://knowtheantar.com/products/antar-gut-health-program?variant=50851499245700",
                 },
                 {
                   months: "3 Month",
@@ -341,7 +352,8 @@ export default function GutHealthScreen() {
                     "36 Movement Therapy Sessions",
                     "6 Mental Wellness Sessions",
                   ],
-                  url: "https://knowtheantar.com/products/antar-gut-health-program?variant=50851499278468",
+                  url:
+                    "https://knowtheantar.com/products/antar-gut-health-program?variant=50851499278468",
                 },
                 {
                   months: "6 Month",
@@ -352,7 +364,8 @@ export default function GutHealthScreen() {
                     "72 Movement Therapy Sessions",
                     "12 Mental Wellness Sessions",
                   ],
-                  url: "https://knowtheantar.com/products/antar-gut-health-program?variant=50851499311236",
+                  url:
+                    "https://knowtheantar.com/products/antar-gut-health-program?variant=50851499311236",
                 },
                 {
                   months: "12 Month",
@@ -363,7 +376,8 @@ export default function GutHealthScreen() {
                     "144 Movement Therapy Sessions",
                     "24 Mental Wellness Sessions",
                   ],
-                  url: "https://knowtheantar.com/products/antar-gut-health-program?variant=50851499344004",
+                  url:
+                    "https://knowtheantar.com/products/antar-gut-health-program?variant=50851499344004",
                 },
               ].map((p, idx) => (
                 <View

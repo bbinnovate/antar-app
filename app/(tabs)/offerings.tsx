@@ -10,6 +10,8 @@ import GradientCTA from "~/components/custom/GradientCTA";
 import { router } from "expo-router";
 import { ArrowRight } from "lucide-react-native";
 import Svg, { Path, Circle, Line } from "react-native-svg";
+import NotificationHeader from "~/components/custom/NotificationHeader";
+const userAvatar = require("~/assets/images/user.png");
 
 type AttendedCardProps = {
   title: string;
@@ -48,6 +50,7 @@ const AttendedCard = ({ title, subtitle, image, route }: AttendedCardProps) => {
 export default function OfferingsScreen() {
   return (
     <Screen>
+      <NotificationHeader avatarSource={userAvatar} />
       {/* Inline gradient header (no separate component) */}
       <View className="w-full mt-2">
         <LinearGradient
