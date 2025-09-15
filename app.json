@@ -18,7 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bbinnovations.antar",
+      "bundleIdentifier": "com.pratikbb.antar",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -29,7 +29,7 @@
         "foregroundImage": "./assets/images/profileLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.bbinnovations.antar"
+      "package": "com.pratikbb.antar"
     },
     "web": {
       "bundler": "metro",
@@ -47,9 +47,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "0646eda2-ed4e-4aca-bf7b-f7463bca4fd9"
+        "projectId": "9fd0c2e2-c872-44fb-93ed-8424f135ff29"
       }
     },
-    "owner": "bbinnovations"
+    "owner": "pratikbb"
   }
 }
