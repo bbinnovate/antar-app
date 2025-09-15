@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Antar",
-    "slug": "antar-v2",
+    "slug": "antar-v1",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/profileLogo.png",
@@ -18,7 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bbinnovations.antar",
+      "bundleIdentifier": "com.pratikbb.antar-v1",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -29,7 +29,7 @@
         "foregroundImage": "./assets/images/profileLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.bbinnovations.antar"
+      "package": "com.pratikbb.antarv1"
     },
     "web": {
       "bundler": "metro",
@@ -47,9 +47,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "ae848d2a-f34b-4511-9378-5d204199682f"
+        "projectId": "8deb8ba6-7cf9-48b7-a74b-c3a9eeb9736a"
       }
     },
-    "owner": "bbinnovations"
+    "owner": "pratikbb"
   }
 }
