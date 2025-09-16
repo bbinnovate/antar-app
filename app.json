@@ -29,6 +29,7 @@
         "foregroundImage": "./assets/images/profileLogo.png",
         "backgroundColor": "#ffffff"
       },
+      "jsEngine": "jsc",
       "package": "com.bbinnovations.antar"
     },
     "web": {

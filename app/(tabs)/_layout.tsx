@@ -62,7 +62,7 @@ export default function TabLayout() {
           }}
         />
         {/* Keep these routes in codebase but hide from tab bar */}
-        <Tabs.Screen name="home" options={{ href: null }} />
+        {/* <Tabs.Screen name="home" options={{ href: null }} /> */}
         <Tabs.Screen name="sessions" options={{ href: null }} />
         <Tabs.Screen name="plans" options={{ href: null }} />
         <Tabs.Screen name="community" options={{ href: null }} />
