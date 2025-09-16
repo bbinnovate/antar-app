@@ -1,13 +1,6 @@
 import * as ProgressPrimitive from '@rn-primitives/progress';
 import * as React from 'react';
-import { Platform, View } from 'react-native';
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-  useDerivedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import { Platform, View, Animated } from 'react-native';
 import { cn } from '~/lib/utils';
 
 function Progress({
@@ -32,16 +25,23 @@ function Progress({
 export { Progress };
 
 function Indicator({ value, className }: { value: number | undefined | null; className?: string }) {
-  const progress = useDerivedValue(() => value ?? 0);
+  const animatedWidth = React.useRef(new Animated.Value(value ?? 0)).current;
 
-  const indicator = useAnimatedStyle(() => {
-    return {
-      width: withSpring(
-        `${interpolate(progress.value, [0, 100], [1, 100], Extrapolation.CLAMP)}%`,
-        { overshootClamping: true }
-      ),
-    };
-  });
+  React.useEffect(() => {
+    Animated.spring(animatedWidth, {
+      toValue: value ?? 0,
+      useNativeDriver: false, // width cannot use native driver
+      overshootClamping: true,
+    }).start();
+  }, [value, animatedWidth]);
+
+  const widthStyle = {
+    width: animatedWidth.interpolate({
+      inputRange: [0, 100],
+      outputRange: ['1%', '100%'],
+      extrapolate: 'clamp',
+    }),
+  };
 
   if (Platform.OS === 'web') {
     return (
@@ -56,7 +56,7 @@ function Indicator({ value, className }: { value: number | undefined | null; cla
 
   return (
     <ProgressPrimitive.Indicator asChild>
-      <Animated.View style={indicator} className={cn('h-full bg-foreground', className)} />
+      <Animated.View style={[widthStyle]} className={cn('h-full bg-foreground', className)} />
     </ProgressPrimitive.Indicator>
   );
 }
